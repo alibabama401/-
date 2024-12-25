@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+option cc_generic_services=false;
+
+package FriendsProto;
+
+message AddFriendReq
+{
+    sint64 friend_uid = 1;  //好友ID
+    string content    = 2;  //验证信息
+}
+
+message AddFriendResp
+{
+    sint32 resultCode = 1;  //结果码
+    sint64 friend_uid = 2;  //好友ID
+}
+
+message DeleteFriendReq
+{
+    sint64 friend_uid = 1;   //好友ID
+}
+
+message DeleteFriendResp
+{
+    sint32 resultCode = 1;  //结果码
+    sint64 friend_uid = 2;  //好友ID
+}
+
+message QueryFriendListResp
+{
+    repeated sint64 FriendList = 1;  //好友列表
+    sint32 resultCode = 2;  //结果码
+}
+
+message QueryOnlineNotFriendListResp
+{
+    repeated sint64 OnlineList = 1;  //在线非好友列表
+    sint32 resultCode = 2;  //结果码
+}
+
+enum Eum_Friend_Relationship_Type
+{
+    E_APPLICANT         = 0; //发出申请
+    E_BE_APPLIED        = 1; //被申请
+    E_APPLY_BEEN_READ   = 2; //请求已读
+    E_FRIEND            = 3; //好友
+    E_DELETE            = 4; //已删除 
+}
+
+message QueryApplicantListResp
+{
+    repeated sint64 ApplicantList = 1;   //好友列表
+    sint32 resultCode = 2;  //结果码
+    repeated string contentList   = 3; //验证信息列表
+}
+
+//同意或拒绝好友请求
+message AgreeToAddReq
+{
+    sint64    friend_uid = 1;   //好友ID
+    sint32    is_agree = 2;     //同意为1,否则为0
+}
+
+message AgreeToAddResp
+{
+    sint32 resultCode = 1;  //结果码
+}
+
+//同意添加好友通知
+message AgreeToAddNotice
+{
+    sint64 friend_uid  = 1;  //好友ID
+    sint32 is_agree    = 2;  //同意为1,否则为0
+    string friend_name = 3;  //好友昵称
+}
+
+message GiveInfo
+{
+    sint64 uid = 1;//用户ID
+    sint32 isCanGive = 2;//今日是否可赠送筹码,可赠送为1,否则为0
+};
+
+message QueryFriendGiveInfoResp
+{
+    sint32 resultCode = 1;  //结果码
+    repeated GiveInfo giveInfo = 2;//已赠送信息
+}

@@ -1,0 +1,146 @@
+syntax = "proto3";
+
+option cc_generic_services=false;
+
+//
+package XGameDDZProto;
+
+//协议版本
+enum E_Proto_Version
+{
+    iProtoVersionDefault    = 0;
+    iProtoVersion           = 1021;  //协议版本
+}
+
+//消息号枚举，CS发送和接受为同一消息号
+enum E_msg_ID 
+{
+    MSG_ID_BEGIN = 0;
+
+    DDZ_msg2csReady_E                        = 220;  //准备
+    DDZ_msg2cSendCardNotify_E                = 222;  //发手牌
+    DDZ_msg2cSendCommCardNotify_E            = 223;  //发地主牌
+
+    DDZ_msg2sActNotify_E                     = 224;  //决策通知
+    DDZ_msg2csDecision_E                     = 225;  //玩家决策
+    DDZ_msg2csDecisionNotify_E               = 226;  //决策通知
+    
+    DDZ_msg2sGameEnd_E                       = 227;   //游戏结束
+    DDZ_msg2csGameStation_E                  = 228;   //牌桌快照
+
+    DDZ_msg2csTuoGuan_E                      = 229;   //托管
+
+    DDZ_msg2cLeaveNotify_E                   = 230;   //通知玩家离桌
+
+    DDZ_msg2cReMatchGame_E                   = 231;   //通知玩家重新匹配
+
+
+    MSG_ID_END = 300;
+}
+
+//DDZ_msg2csReady_E
+message DDZ_msg2csReady
+{
+    int32 iResultID = 1;
+    int32 iCid = 2; //座位号
+    int32 iReadyType = 3; 
+    int32 iReadyTime = 4;
+}
+
+message PlayerInfo
+{
+    int32 iCid = 1;
+    sint64 lPlayerID = 2;    //用户ID
+    string sNickName = 3;    //玩家昵称
+    string sHeadStr = 4;     //头像路径
+    sint32 iPlayerGender = 5;  //玩家性别 0-未知 1-男 2-女
+    int64 lCidScore = 6; //当前分数
+    bool bBankerCid = 7; //是否地主
+    repeated int32 sHdCards = 8;// 手牌
+    repeated int32 sOutCards = 9;// 出的牌
+    int64 lWinScore = 10; //输赢分数
+    int32 iMultipleTimes = 11; //倍数
+    bool bMaxLimit = 12; // 封顶
+    bool bMinLimit = 13; // 破产
+    bool bTuoGuan = 14;
+    int32 iJiaoDiZhu = 15;// [-1,0,1,2,3]
+    int32 iReadyTime = 16; //准备时间
+}
+
+//DDZ_msg2cSendCardNotify_E
+message DDZ_msg2cSendCardNotify
+{
+    map<int32, PlayerInfo> mPlayerInfo = 1; //玩家信息
+    int64 lBaseScore = 2; //底分
+    int32 iBankerCid = 3; //地主
+    repeated int32 sCommCards = 4; //地主牌
+}
+
+//DDZ_msg2sActNotify_E
+message DDZ_msg2sActNotify
+{
+    sint32 iCid = 1;
+    sint32 iActType = 2; //行为类型 1： 叫地主  2： 加倍 3： 出牌
+    sint32 iCfgOptionTime = 3; //配置思考时间
+    sint32 iRemainOptionTime = 4; //已用思考时间（）
+    bool bCanDaPai = 5; //是否能压牌
+    repeated sint32 sPreCards = 6; //上家出的牌
+    bool bFirstDaPai = 7; //是否第一手牌
+    int32 iPreCardType = 8;// 上家牌型
+}
+
+//DDZ_msg2csDecision_E
+message DDZ_msg2csDecision
+{
+    int32 iResultID = 1;
+    sint32 iCid = 2;
+    sint32 iActType = 3;
+    sint32 iParam = 4; // 叫地主/加倍/牌型
+    sint32 iSpecTime = 5; // 特效时间
+    repeated int32 sCards = 6;// 牌
+    sint32 iPreCid = 7; //上家座位号
+}
+
+message DDZ_msg2sGameEnd
+{
+    map<int32, PlayerInfo> mCalInfo = 1; //结算信息
+    int64 lBaseScore = 2; //底分
+    int32 iSpring = 3; // 1: 春天 2： 反春天
+    bool bDismiss = 4; //是否解散
+}
+
+message DDZ_msg2csGameStation
+{
+    int32 iResultID = 1;
+    sint32 iBankerCid = 2;
+    sint32 iTokenCid = 3; //当前玩家座位
+    map<sint32, PlayerInfo> mUserInfo = 4; //玩家信息
+    DDZ_msg2sActNotify mAction = 5;   // 当前玩家操作
+    sint32 lBaseScore = 6; //底分
+    sint32 iBetId = 7; //场次id
+    sint32 iMultiple = 8; //当前倍数
+    DDZ_msg2sGameEnd mCalInfo= 9; //结算信息
+    repeated int32 sCommCards = 10;
+}
+
+//DDZ_msg2csTuoGuan_E
+message DDZ_msg2csTuoGuan
+{
+    int32 iResultID = 1;
+    int32 iCid = 2; //座位号
+    bool bTuoGuan = 3; //是否托管
+}
+
+//DDZ_msg2cLeaveNotify_E
+message DDZ_msg2cLeaveNotify
+{
+    int32 iCid= 1;
+}
+
+//DDZ_msg2cReMatchGame_E
+message DDZ_msg2cReMatchGame
+{
+    
+}
+//////////////////////////////////////////
+

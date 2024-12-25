@@ -1,0 +1,197 @@
+syntax = "proto3";
+
+option cc_generic_services = false;
+
+package ClubProto;
+
+enum E_CLUB_POSITION
+{
+    CLUB_PRESIDENT = 0;  // 会长
+    CLUB_MANAGER = 1;  // 管理员
+    CLUB_MEMBER = 2;  // 成员
+}
+
+message ClubInfo
+{
+    string  clubName = 1;  //俱乐部名称
+    sint64  clubId = 2;  //俱乐部ID
+    sint32  clubLevel = 3;  //俱乐部级别
+    string  clubAvatar = 4;  //俱乐部头像
+    string  clubNotice = 5;  //俱乐部宣言
+    sint32  clubMangerLimit = 6;  //俱乐部管理员上限
+    sint32  clubMemberLimit = 7;  //俱乐部成员上限
+    sint32  clubFund = 8;  //俱乐部基金
+    repeated  ClubMemberInfo  clubMemberInfo = 9;  //俱乐部成员信息
+}
+
+message ClubMemberInfo
+{
+    sint64 uId = 1;    //uid
+    E_CLUB_POSITION clubPosition = 2;  //位置
+}
+
+//创建俱乐部
+message CreateClubReq
+{
+    ClubInfo  clubInfo = 1;  //俱乐部信息
+}
+
+message CreateClubResp
+{
+    sint32 resultCode = 1;  //结果码
+    ClubInfo  clubInfo = 2;  //俱乐部信息
+}
+
+
+//俱乐部列表
+message ClubListReq
+{
+    sint32 club_filter = 1; //过滤条件（1：已经加入， 2：已创建 3：可加入）
+}
+
+message ClubListResp
+{
+    sint32 resultCode = 1;
+    repeated ClubInfo infos = 2;
+}
+
+//加入俱乐部
+message JoinClubReq
+{
+    sint64 clubId = 1;
+    string declaration = 2;//入会宣言
+}
+
+message JoinClubResp
+{
+    sint32 resultCode = 1;
+}
+
+//踢出俱乐部
+message KickClubMemberReq
+{
+    sint64 clubId = 1;
+    sint64 targetUid = 2;
+}
+
+message KickClubMemberResp
+{
+    sint32 resultCode = 1;
+    sint32 clubId = 2;
+    sint32 targetUid = 3;
+}
+
+//退出俱乐部
+message ExitClubReq
+{
+    sint32 clubId = 1;
+}
+
+message ExitClubResp
+{
+    sint32 resultCode = 1;
+    sint32 clubId = 2;
+}
+
+message MemberInfo
+{
+    string  nickName = 1;  //昵称
+    string  avata = 2;  //头像
+    sint64  uId = 3;  //uid
+    E_CLUB_POSITION  clubPosition = 4;  //位置
+}
+
+//成员列表
+message ClubMemberListReq
+{
+    sint64 clubId = 1;
+}
+
+message ClubMemberListResp
+{
+    sint32 resultCode = 1;
+    sint64 clubId = 2;
+    repeated MemberInfo infos = 3;
+}
+
+//申请列表
+message ClubApplyListReq
+{
+    sint32 clubId = 1;
+}
+
+message ClubApplyListResp
+{
+    message CProtoItem
+    {
+        sint64 uId = 1;
+        string declaration = 2;//入会宣言
+        sint64 time = 3;//申请时间
+    }
+    
+    sint32 resultCode = 1;
+    sint64 clubId = 2;
+    repeated CProtoItem items = 3;
+}
+
+//审核入会申请
+message ClubAuditApplyReq
+{
+    sint64 clubId = 1;  //俱乐部ID
+    sint64 targetUid = 2;  //申请者ID
+    bool  agree = 3;  //是否同意
+}
+
+message ClubAuditApplyResp
+{
+    sint32 resultCode = 1;  //结果码
+    sint64 clubId = 2;  //俱乐部ID
+    sint64 targetUid = 3;  //申请者ID
+    bool   agree = 4;  //是否同意
+}
+
+//俱乐部邀请
+message ClubInviteReq
+{
+    sint64 clubId = 1;
+    sint64 uId = 2;
+}
+
+message ClubInviteResp
+{
+    sint32 resultCode = 1;
+}
+
+//邀请列表
+message ClubInviteListReq
+{
+
+}
+
+message ClubInviteListResp
+{
+    message CProtoItem
+    {
+        string clubName = 1;
+        sint64 clubAvatar = 2;
+    }
+    sint32 resultCode = 1;
+    repeated CProtoItem club_info = 2;
+}
+
+//应答入会邀请
+message ClubAckInviteReq
+{
+    sint64 clubId = 1;  //俱乐部ID
+    bool  agree = 2;  //是否同意
+}
+
+message ClubAckInviteResp
+{
+    sint32 resultCode = 1;  //结果码
+    sint64 clubId = 2;  //俱乐部ID
+    bool   agree = 3;  //是否同意
+}
+
+
+

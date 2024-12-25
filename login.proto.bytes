@@ -1,0 +1,421 @@
+syntax = "proto3";
+
+option cc_generic_services = false;
+
+package LoginProto;
+
+//游客登录
+/*
+message GuestLoginReq
+{
+    sint32 uid = 1;  //用户ID
+}
+
+message GuestLoginResp
+{
+    string token = 1;   //登录Token值
+}
+
+//微信登录
+message WechatLoginReq
+{
+    string wechatCode = 1; //微信登录Code值
+    string deviceNo = 2;   //设备号
+}
+
+message WechatLoginResp
+{
+    sint32 uid = 1;     //用户ID
+    string token = 2;   //微信refresh_token
+}
+
+//缓存登录
+message CacheLoginReq
+{
+    sint32 uid = 1;         //用户ID
+    string deviceNo = 2;    //设备号
+    string token = 3;       //登录token值，即微信refresh_token
+}
+
+message CacheLoginResp
+{
+    string token = 1;   //登录Token值，即微信refresh_token
+}
+*/
+
+//登出
+message LogoutReq
+{
+    sint32 uid = 1;    //用户ID
+}
+
+message LogoutResp
+{
+    sint32 resultCode = 1; //结果码
+}
+
+//Token验证
+message CheckLoginTokenReq
+{
+    sint64 lUid = 1;    //用户ID
+    string sToken = 2;  //登录token值，即微信refresh_token
+}
+
+//设备号登录，即游客登录
+message DeviceLoginReq
+{
+    string deviceNo          = 1;  //设备号
+    string deviceID          = 2;  //设备唯一码（android: imei, ios: idfa）
+    string deviceType        = 3;  //机型信息
+    E_Platform_Type platform = 4;  //平台类型
+    E_Channel_ID channnelID  = 5;  //渠道号
+    int32  areaID            = 6;  //所属区域ID
+}
+
+message DeviceLoginResp
+{
+    sint32 resultCode = 1;    //结果码
+    sint32 uid = 2;            //用户ID
+    string token = 3;       //登录Token值
+    sint32 flag = 4;        //是否新账号，0--否，1--是
+}
+
+// 账号登录
+message UserLoginReq
+{
+    string userName = 1;  //账号
+    string passwd = 2;    //密码
+}
+
+message UserLoginResp
+{
+    sint32 resultCode = 1;    //结果码
+    sint64 uid = 2;         //用户ID
+    string token = 3;       //登录Token值
+}
+
+//平台类型
+enum E_Platform_Type
+{
+    E_PLATFORM_TYPE_UNKNOWN = 0;  //未知
+    E_PLATFORM_TYPE_IOS = 1;      //ios
+    E_PLATFORM_TYPE_ANDROID = 2;  //android
+    E_PLATFORM_TYPE_H5 = 3;       //h5
+}
+
+//渠道号
+enum E_Channel_ID
+{
+    E_CHANNEL_ID_UNKNOWN  = 0;   //未知
+    E_CHANNEL_ID_TEST     = 1;   //测试渠道
+    E_CHANNEL_ID_GOOGLE   = 2;   //google
+    E_CHANNEL_ID_FACEBOOK = 3;   //facebook
+    E_CHANNEL_ID_APPLE    = 4;   //apple
+}
+
+// 账号注册
+message RegisterReq
+{
+    string userName          = 1;  //账号
+    string passwd            = 2;  //密码
+    string deviceID          = 3;  //设备唯一码（android: imei, ios: idfa）
+    string deviceType        = 4;  //机型信息
+    E_Platform_Type platform = 5;  //平台类型
+    E_Channel_ID channnelID  = 6;  //渠道号
+    int32  areaID            = 7;  //所属区域ID
+}
+
+message RegisterResp
+{
+    sint32 resultCode = 1;    //结果码
+    sint64 uid = 2;         //用户ID
+}
+
+//google, facebook, apple登录
+enum E_LOGIN_TYPE
+{
+    E_LOGIN_GOOGLE   = 0;
+    E_LOGIN_FACEBOOK = 1;
+    E_LOGIN_APPLE    = 2;
+}
+
+message ThirdPartyLoginReq
+{
+    E_LOGIN_TYPE loginType   = 1;
+    string openId            = 2;  //唯一识别码 
+    string token             = 3;  //登录token
+    string deviceNo          = 4;  //设备号
+    E_Platform_Type platform = 5;  //平台类型
+    E_Channel_ID channnelID  = 6;  //渠道号
+    int32  areaID            = 7;  //所属区域ID
+}
+
+message ThirdPartyLoginResp
+{
+    sint32 resultCode = 1;  //结果码
+    sint64 uid = 2;         //用户ID
+    string token = 3;       //登录Token值
+    sint32 flag = 4;        //是否新账号，0--否，1--是
+}
+
+//token 快速登录
+message QuickLoginReq
+{
+    sint64 uid = 1;         //用户ID
+    string token = 2;       //登录Token值
+}
+
+message QuickLoginResp
+{
+    sint32 resultCode = 1;  //结果码
+    sint64 uid = 2;         //用户ID
+    string token = 3;       //登录Token值
+    sint32 flag = 4;        //是否新账号，0--否，1--是
+}
+
+//手机号登录
+message PhoneLoginReq
+{
+    string          phone = 1;  //手机账号
+    int32           msgCode = 2;  //短信验证码
+    int32           areaID = 3;  //区号
+    string          deviceID = 4;  //设备唯一码（android: imei, ios: idfa）
+    string          deviceType = 5;  //机型信息
+    E_Platform_Type platform = 6;  //平台类型
+    E_Channel_ID    channnelID = 7;  //渠道号
+}
+
+message PhoneLoginResp
+{
+    sint32 uid = 1; //用户ID
+    string token = 2; //登录Token值
+    sint32 resultCode = 3; //结果码
+}
+
+//发送手机验证码
+message SendPhoneMessageCodeReq
+{
+    string phone = 1; //手机号
+}
+
+message SendPhoneMessageCodeResp
+{
+    sint32 resultCode = 1; //结果码
+}
+
+//请求网关地址信息
+message UserRounterInfoReq
+{
+    sint32 reserve = 1; //默认值非0
+}
+
+message UserRounterInfoResp
+{
+    sint32 resultCode = 1; //结果码
+    string routerAddr = 2; //网关地址
+    sint32 routerPort = 3; //网关端口
+}
+
+// 绑定三方账号
+message BindThirdPartyAccountReq
+{
+    E_LOGIN_TYPE accountType   = 1;  //账号类型
+    E_Channel_ID channnelID    = 2;  //渠道号
+    string openId              = 3;  //唯一识别码
+}
+
+message BindThirdPartyAccountResp
+{
+    sint32 resultCode = 1; //结果码
+}
+
+//在线用户零点更新请求
+message OnlineUserZeroUpdateReq
+{
+    sint64 uid = 1;//用户ID
+}
+
+//在线用户零点更新应答
+message OnlineUserZeroUpdateResp
+{
+    sint32 resultCode = 1;//结果码
+}
+
+//事件类型
+enum E_Event_Type
+{
+    E_EVENT_TYPE_UNKNOWN             = 0;  //未知
+    E_EVENT_TYPE_CLIENT_START        = 1;  //客户端启动
+    E_EVENT_TYPE_VERSION_CHECK       = 2;  //版本检测
+    E_EVENT_TYPE_UPDATE_START        = 3;  //更新启动
+    E_EVENT_TYPE_UPDATE_END          = 4;  //更新结束
+    E_EVENT_TYPE_LOGIN_PAGE          = 5;  //登录界面展示
+    E_EVENT_TYPE_LOGIN_CLICK         = 6;  //登录按钮点击次数
+    E_EVENT_TYPE_LOGIN_AUTO          = 7;  //自动登录
+    E_EVENT_TYPE_LOGIN_MAIN          = 8;  //登录到主界面次数
+    E_EVENT_TYPE_INITIAL_CHIPS_PAGE  = 9;  //初始筹码弹窗展示次数
+    E_EVENT_TYPE_INITIAL_CHIPS_CLICK = 10; //初始筹码弹窗点击次数
+    E_EVENT_TYPE_HALL_GUIDE          = 11; //大厅新手引导展示
+    E_EVENT_TYPE_HALL_GUIDE_END      = 12; //大厅新手引导结束
+    E_EVENT_TYPE_PLAY_GUIDE          = 13; //牌局新手引导展示
+    E_EVENT_TYPE_PLAY_GUIDE_SELECT   = 14; //牌局新手引导选择，不需要，需要
+    E_EVENT_TYPE_PLAY_GUIDE_QUIT     = 15; //牌局引导退出按钮
+    E_EVENT_TYPE_PLAY_GUIDE_QUITED   = 16; //牌局引导退出确定
+    E_EVENT_TYPE_CAREER_START        = 17; //生涯快速开始按钮
+    E_EVENT_TYPE_WORLD_START         = 18; //世界快速开始按钮
+    E_EVENT_TYPE_CAREER_PAGE_CLICK   = 19; //生涯按钮点击
+    E_EVENT_TYPE_CAREER_ENTER_CLICK  = 20; //生涯五个入口点击
+    E_EVENT_TYPE_GRADE_RANK_CLICK    = 21; //段位排行点击
+    E_EVENT_TYPE_GRADE_REWARD_CLICK  = 22; //段位奖励点击
+    E_EVENT_TYPE_EXCHANGE_CLICK      = 23; //兑换中心点击
+    E_EVENT_TYPE_HALL_FREECHIP_CLICK = 24; //大厅免费筹码点击
+    E_EVENT_TYPE_SNG_FREECHIP_CLICK  = 25; //三人滚轮赛免费筹码点击
+    E_EVENT_TYPE_QS_FREECHIP_CLICK   = 26; //经典德扑免费筹码点击
+    E_EVENT_TYPE_WORLD_PAGE_CLICK    = 27; //世界按钮点击
+    E_EVENT_TYPE_TICKET_PAGE         = 28; //新手引导-初始筹码，奖券弹窗展示
+    E_EVENT_TYPE_TICKET_GET          = 29; //新手引导-初始筹码，奖券点击领取
+    E_EVENT_TYPE_PLAY_NOW            = 30; //新手引导-经典点击快捷报名（首次点击）
+    E_EVENT_TYPE_SNG_EXIT            = 31; //三人滚轮赛-退出比赛界面（游戏中2级弹窗）
+    E_EVENT_TYPE_SNG_EXIT_OK         = 32; //三人滚轮赛-取消退出
+    E_EVENT_TYPE_SNG_SETTLE_HALF     = 33; //三人滚轮赛-中途退出结算面板
+    E_EVENT_TYPE_SNG_SETTLE_NORMAL   = 34; //三人滚轮赛-正常牌局结束结算面板
+    E_EVENT_TYPE_SNG_AGAIN           = 35; //三人滚轮赛-再来一次
+    E_EVENT_TYPE_SNG_EXIT_SETTLE     = 36; //三人滚轮赛-关闭结算按钮（正常牌局结算退出）
+    E_EVENT_TYPE_EXCHANGE_CLICKFIRST = 37; //兑换中心-首次点击
+    E_EVENT_TYPE_EXCHANGE_ENTER      = 38; //兑换中心-进入
+    E_EVENT_TYPE_EXCHANGE_1K         = 39; //兑换中心-成功兑换1K筹码
+    E_EVENT_TYPE_EXCHANGE_EXIT       = 40; //兑换中心-退出兑换中心
+    E_EVENT_TYPE_EXCHANGE_GET_FIRST  = 41; //兑换中心-去获取（首次点击）
+    E_EVENT_TYPE_GET_TICKET_SEASON   = 42; //获取奖券-德扑赛季
+    E_EVENT_TYPE_GET_TICKET_TASK     = 43; //获取奖券-完成任务
+    E_EVENT_TYPE_GET_TICKET_LEVEL    = 44; //获取奖券-冲级达人
+    E_EVENT_TYPE_FRTPOP_EX_CLICK     = 45; //首弹-兑换-点击兑换按钮
+    E_EVENT_TYPE_FRTPOP_EX_CLOSE     = 46; //首弹-兑换-点击关闭
+    E_EVENT_TYPE_FRTPOP_NEW_CLICK    = 47; //首弹-新手狂欢-点击前往
+    E_EVENT_TYPE_FRTPOP_NEW_CLOSE    = 48; //首弹-新手狂欢-点击关闭
+    E_EVENT_TYPE_FRTPOP_SIGN_CLICK   = 49; //首弹-签到-点击签到
+    E_EVENT_TYPE_FRTPOP_SIGN_CLOSE   = 50; //首弹-签到-点击关闭
+    E_EVENT_TYPE_FRTPOP_TH_RECHARGE  = 51; //首弹-首冲特惠-点击充值
+    E_EVENT_TYPE_FRTPOP_TH_CLOSE     = 52; //首弹-首冲特惠-点击关闭
+    E_EVENT_TYPE_FRTPOP_LB_RECHARGE  = 53; //首弹-破产礼包-点击充值
+    E_EVENT_TYPE_FRTPOP_LB_CLOSE     = 54; //首弹-破产礼包-点击关闭
+    E_EVENT_TYPE_FRTPOP_PCJL_GET     = 55; //首弹-破产奖励-领取奖励
+    E_EVENT_TYPE_FRTPOP_PCJL_CLOSE   = 56; //首弹-破产奖励-点击关闭
+    E_EVENT_TYPE_CAREER_DATA_START   = 57; //生涯拉取数据启动
+    E_EVENT_TYPE_MTT_CLICK           = 58; //MTT的点击
+    E_EVENT_TYPE_POP_PCYH_CLOSE      = 59; //弹窗-破产优惠-关闭
+    E_EVENT_TYPE_POP_PCYH_GOTO       = 60; //弹窗-破产优惠-跳转支付
+    E_EVENT_TYPE_POP_DSYH_CLOSE      = 61; //弹窗-大输优惠-关闭
+    E_EVENT_TYPE_POP_DSYH_GOTO       = 62; //弹窗-大输优惠-跳转支付
+    E_EVENT_TYPE_FREECHIP_NEW_BONUS  = 63; //免费筹码获取-点击新手狂欢
+    E_EVENT_TYPE_FREECHIP_RECHARGE   = 64; //免费筹码获取-点击充值优惠
+    E_EVENT_TYPE_FREECHIP_LUCKY_SPIN = 65; //免费筹码获取-点击幸运旋转
+    E_EVENT_TYPE_FREECHIP_DAILY_SIGN = 66; //免费筹码获取-点击每日签到
+    E_EVENT_TYPE_FREECHIP_ACTIVITY   = 67; //免费筹码获取-点击精彩活动
+    E_EVENT_TYPE_CAREER_DATA_END     = 68; //生涯拉取数据结束
+    E_EVENT_TYPE_AI_START            = 78; //AI挑战赛-快速开始
+    E_EVENT_TYPE_AI_PRIMARY          = 79; //AI挑战赛-初级场
+    E_EVENT_TYPE_AI_MIDDLE           = 80; //AI挑战赛-中级场
+    E_EVENT_TYPE_AI_HIGH             = 81; //AI挑战赛-高级场
+    E_EVENT_TYPE_AI_UNLOCK_ADVANCE   = 82; //AI挑战赛-进阶数据解锁
+}
+
+//按钮类型(或选择类型)
+enum E_Button_Type
+{
+    E_BUTTON_TYPE_UNKNOWN     = 0;  //未知
+    E_BUTTON_TYPE_GUEST       = 1;  //游客
+    E_BUTTON_TYPE_FACEBOOK    = 2;  //Facebook
+    E_BUTTON_TYPE_APPLE       = 3;  //Apple
+}
+
+//入口类型
+enum E_Enter_Type
+{
+    E_ENTER_TYPE_UNKNOWN   = 0;  //未知
+    E_ENTER_TYPE_ENGLAND   = 1;  //英伦对决
+    E_ENTER_TYPE_PARIS     = 2;  //巴黎之巅
+    E_ENTER_TYPE_NEWYORK   = 3;  //纽约豪客
+    E_ENTER_TYPE_MOSCOW    = 4;  //莫斯科决战
+    E_ENTER_TYPE_LASVEGAS  = 5;  //拉斯维加斯
+}
+
+//用户行为上报统计请求
+message UserActionReportReq
+{
+    sint32 eventType       = 1; //事件类型,参考枚举E_Event_Type
+    sint32 subType         = 2; //子类型:对应不同事件类型的登录类型,选择类型,入口类型等等
+    string device          = 3; //设备
+    sint64 uid             = 4; //用户ID
+    repeated string extend = 5; //扩展数据
+}
+
+//用户行为上报统计应答
+message UserActionReportResp
+{
+    sint32 resultCode = 1;//结果码
+}
+
+
+/*
+//手机号缓存登录
+message CachePhoneLoginReq
+{
+    sint32 uid = 1;             //用户ID
+    string phoneAccount = 2;    //手机账号
+    string deviceNo = 3;        //设备号
+}
+
+message CachePhoneLoginResp
+{
+    sint32 uid = 1;         //用户ID
+    string token = 2;       //登录Token值
+}
+
+//拉取设备登录列表
+message GetDeviceLoginListReq
+{
+    string deviceNo = 1;    //设备号
+}
+
+message DeviceLogin
+{
+    sint32 uid = 1;             //用户ID
+    sint32 type = 2;            //类型, 0:游客 1:手机号
+    string phoneAccount = 3;    //手机账号
+    string deviceNo = 4;        //设备号
+}
+
+message GetDeviceLoginListResp
+{
+    repeated DeviceLogin DeviceLoginList = 1;    //设备登录列表
+}
+
+// 删除用户账号
+message DeleteUserAccountReq
+{
+    sint32 uid = 1;            //用户id
+    string phoneAccount = 2;   //手机号
+    string deviceNo = 3;       //设备号
+}
+
+message DeleteUserAccountResp
+{
+    sint32 resultCode = 1;  //结果码
+}
+
+// 修改手机号密码
+message ModifyPhonePasswordReq
+{
+    string phone = 1;      //手机号
+    string code = 2;       //验证码
+    string newPassword = 3;//新密码
+    string deviceNo = 4;   //设备号
+}
+
+message ModifyPhonePasswordResp
+{
+    sint32 resultCode = 1; //结果码
+}
+*/
+

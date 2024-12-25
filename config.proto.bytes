@@ -1,0 +1,321 @@
+syntax = "proto3";
+
+option cc_generic_services=false;
+
+package ConfigProto;
+
+//房间级别
+enum E_Room_Type
+{
+    E_ROOM_TYPE_DEFAULT = 0;
+    E_ROOM_TYPE_NORMAL  = 1;  //普通
+    E_ROOM_TYPE_SENIOR  = 2;  //高级
+}
+
+//房间信息
+message GameRoom
+{
+    sint32 id = 1;
+    string roomID = 2;          //房间ID
+    string roomName = 3;        //房间名称
+    E_Room_Type roomType = 4;   //房间类型，1--普通， 2--高级
+    string imageBig = 5;        //大地图图片
+    string imageSmall = 6;      //小地图图片
+    sint32 deskNum = 7;         //桌子数量
+    sint64 minGold = 8;         //最少携带金币
+    sint64 maxGold = 9;         //最大携带金币
+    sint32 profit = 10;         //盈利抽成的百分比，如 5 表示 5%
+    sint64 bigBlind = 11;       //大盲注
+    sint64 smallBlind = 12;     //小盲注
+    sint64 fastGold = 13;       //快速匹配金额
+}
+
+//取房间列表应答
+message ListGameRoomResp
+{
+    repeated GameRoom data = 1;
+}
+
+//赛事类型
+enum E_Match_Type
+{
+    E_MATCH_TYPE_DEFAULT = 0;
+    E_MATCH_TYPE_MTT     = 1;  //MTT
+    E_MATCH_TYPE_SNG     = 2;  //SNG
+}
+
+//取比赛房间列表请求
+message ListMatchRoomReq
+{
+    sint32 areaID = 1;             //区域ID
+}
+
+//比赛场信息
+message MatchRoom
+{
+    sint32 id = 1;
+    string roomID = 2;      //房间ID
+    string name = 3;        //赛事名称
+    string icon = 4;        //赛事图标
+    E_Match_Type type = 5;  //赛事类型
+    sint32 minNumber = 6;   //最少参赛人数
+    sint32 maxNumber = 7;   //最多参赛人数
+    sint64 initialCard = 8; //初始计分牌数量
+    sint32 limitNumber = 9; //每桌人数上限
+    sint32 startTime = 10;  //比赛开始时间
+    sint32 blindTime = 11;  //涨盲时间
+    sint32 blindID = 12;    //涨盲规则组ID
+    sint32 repurchaseTimes = 13;    //重购次数
+    sint32 additionalTimes = 14;    //增购次数
+    sint32 repurchaseScore = 15;    //重购计分
+    sint32 additionalScore = 16;    //增购计分
+    sint32 awardsID = 17;           //排行奖励组ID
+    sint32 entryFeeID = 18;         //报名消耗组ID
+    sint64 initialPool = 19;        //初始奖池
+    sint32 startTimeType = 20;      //开始时间类型，0--每日赛；1--定时赛
+    sint32 weekTime = 21;           //星期几
+    // sint32 areaID = 21;             //区域ID
+}
+
+//取比赛房间列表应答
+message ListMatchRoomResp
+{
+    repeated MatchRoom data = 1;
+}
+
+//取盲注信息请求
+message ListMatchBlindReq
+{
+    sint32 blindID = 1;  //涨盲规则组ID
+}
+
+//盲注信息
+message MatchBlind
+{
+    sint32 id = 1;                  //组ID
+    sint32 round = 2;               //涨盲轮数
+    sint64 smallBlind = 3;          //小盲
+    sint64 bigBlind = 4;            //大盲
+    sint64 ante = 5;                //前注
+    sint32 repurchase = 6;          //是否开启重购，0--不开，1--开
+    sint32 increasePurchase = 7;    //是否开启增购，0--不开，1--开
+    sint32 purchase = 8;            //是否开启买入, 0--不开，1--开启
+}
+
+//取盲注信息应答
+message ListMatchBlindResp
+{
+    repeated MatchBlind data = 1;
+}
+
+//取报名费请求
+message ListMatchEntryFeeReq
+{
+    sint32 entryFeeID = 1;  //报名消耗组ID
+}
+
+//购买方式
+enum E_Buy_Style
+{
+    E_BUY_STYLE_DEFAULT = 0;        //报名
+    E_BUY_STYLE_REPURCHASE = 1;     //重购
+    E_BUY_STYLE_INCREASE = 2;       //增购
+    E_BUY_STYLE_DELAY = 3;          //延迟报名
+}
+
+//物品类型
+enum E_Goods_Type
+{
+    E_GOODS_TYPE_DEFAULT      = 0; 
+    E_GOODS_TYPE_POINT        = 1;  //金币
+    E_GOODS_TYPE_REWARD_POINT = 2;  //钻石
+    E_GOODS_TYPE_PASS_TICKET  = 3;  //通行券 
+    E_GOODS_TYPE_ENTITY       = 4;  //实物
+}
+
+//报名费
+message EntryFee
+{
+    sint32 id = 1;          //组ID
+    E_Buy_Style style = 2;  //购买方式
+    E_Goods_Type type = 3;  //物品类型
+    sint64 number = 4;      //物品数量
+    sint32 propsID = 5;     //道具ID
+    sint32 serviceFee = 6;  //服务费
+}
+
+//取报名费应答
+message ListMatchEntryFeeResp
+{
+    repeated EntryFee data = 1;
+}
+
+//取奖励信息请求
+message ListRewardReq
+{
+    sint32 awardsID = 1;    //排行奖励组ID
+}
+
+//比赛奖励信息
+message MatchReward
+{
+    sint32 id = 1;          //比赛ID
+    //sint32 play = 2;      //参与玩家数
+    sint32 minPlay = 2;     //最少参与玩家数
+    sint32 maxPlay = 3;     //最多参与玩家数
+    sint32 rewardID = 4;    //奖励ID
+    sint32 number = 5;      //奖励数量
+}
+
+//奖励信息
+message Reward
+{
+    sint32 id = 1;      //奖励ID
+    sint32 rank = 2;    //奖励排名
+    sint32 ratio = 3;   //奖励比例
+    repeated Props props = 4;   //道具信息
+    sint32 rankStart = 5;       //排名开始
+    sint32 rankEnd = 6;         //排名结束
+    //sint32 propsID = 4;       //道具ID
+    //sint32 number = 5;        //道具数量
+}
+
+//取奖励信息应答
+message ListRewardResp
+{
+    repeated MatchReward matchReward = 1;  //比赛奖励
+    repeated Reward data = 2;              //奖励道具
+}
+
+//取道具配置信息请求
+//message ListPropsReq
+//{
+//}
+
+//道具信息
+message Props
+{
+    sint32 id = 1;          //道具ID
+    E_Goods_Type type = 2;  //道具类型
+    string name = 3;        //道具名称
+    //sint64 value = 4;       //道具价值
+    sint64 number = 4;      //道具数量
+}
+
+//取道具配置信息应答
+message ListPropsResp
+{
+    repeated Props data = 2;
+}
+
+//增值服务配置
+message BaseServiceConfigItem
+{
+    sint32 serviceType = 1;     //1：查看公共牌|2：行动时间延长
+    sint32 type = 2;            //道具大类
+    sint32 propsID = 3;         //道具id
+    sint32 number = 4;          //道具数量
+}
+
+//取增值服务配置请求
+// message ListBaseServiceConfigReq
+// {
+// }
+
+//取增值服务配置应答
+message ListBaseServiceConfigResp
+{
+    map<sint32, BaseServiceConfigItem> mapData = 1;
+}
+
+//取增值服务配置请求
+message ListBaseServiceConfigByTypeReq
+{
+    sint32 serviceType = 1;     //1：查看公共牌|2：行动时间延长
+}
+
+//取增值服务配置应答
+message ListBaseServiceConfigByTypeResp
+{
+    sint32 resultCode = 1;  //结果码
+    BaseServiceConfigItem item = 2;
+}
+
+enum E_SignIn_Type
+{
+    E_TYPE_DEFAULT  = 0;
+    E_TYPE_EVERYDAY = 1;
+    E_TYPE_TOTAL    = 2;
+}
+
+message SignInItem
+{
+    E_SignIn_Type signType  = 1;
+    sint32 day                = 2;
+    sint32 awardType          = 3;
+    sint32 awardID            = 4;
+    sint32 awardNum           = 5;
+}
+message ListSignInRsp
+{
+    repeated SignInItem totalDetail     = 1;
+    repeated SignInItem everyDayDetail  = 2;
+}
+
+message ClubLevelItem
+{
+    sint32 club_level = 1;
+    sint32 club_member_limit = 2;
+    sint32 club_manger_limit = 3;
+    sint32 club_free_room_count =4;
+}
+
+//俱乐部等级配置
+message ListClubLevelRsp
+{
+    repeated ClubLevelItem clubLevelDetail =1;
+}
+
+//道具配置详情
+message PropsConfigItem
+{
+    sint32 propsID = 1;     //道具ID
+    sint32 propsType = 2;   //道具大类
+    string name = 3;        //道具名字
+    string iconUrl = 4;     //道具图标
+    string desc = 5;        //道具说明
+    sint32 canGift = 6;     //可赠送
+    sint32 canOverlay = 7;  //可叠加
+    sint64 value = 8;       //道具价值，对应积分
+}
+
+//取道具配置信息应答
+message ListPropsConfigInfoResp
+{
+    repeated PropsConfigItem propsInfo = 1;  //
+}
+
+message ListRoomFilterResp
+{
+    message RoomFilter
+    {
+        string room_id = 1;
+        sint32 number = 2;
+        sint32 type = 3;
+        sint32 smallblind = 4;
+    }
+    repeated RoomFilter filter =1;
+}
+
+//邀请奖励信息
+message ListShareInfo
+{
+    sint32 count = 1;
+    sint32 goodid = 2;
+}
+
+//邀请奖励配置
+message ListShareInfoResp
+{
+    repeated ListShareInfo data = 1;  //type-count 
+}

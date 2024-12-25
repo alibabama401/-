@@ -1,0 +1,412 @@
+syntax = "proto3";
+
+option cc_generic_services = false;
+
+package XGameProto;
+
+enum ActionName
+{
+    ACTION_NAME_DEFAULT = 0;
+    
+    //CONF_GET_VALUE_BY_KEY = 0;                // 通过key值获取value
+    //CONF_LIST_CONFIG_BY_KEY_GROUP = 1;        // 通过key组名值获取config列表
+    //CONF_LIST_GAME_CONF_BY_GAME_ID = 2;       // 通过gameId获取游戏配置列表
+    //CONF_LIST_CONF_BY_KEY_LIST = 3;           // 通过key列表批量获取config列表
+    CONF_LIST_GAME_ROOM_CLIENT = 4;                // 通过游戏id列表批量获取游戏房间配置列表给客户端
+    CONF_LSIT_MATCH_ROOM = 5;                    // 获取比赛房间配置列表给客户端
+    CONF_LSIT_MATCH_BLIND = 6;                    // 获取比赛涨盲配置信息
+    CONF_LSIT_MATCH_ENTRYFEE = 7;                // 获取比赛报名费配置信息
+    CONF_LSIT_MATCH_REWARD = 8;                    // 获取比赛奖励配置信息
+    CONF_LIST_PROPS = 9;                        // 获取比赛道具配置
+    CONF_LIST_SIGNIN = 10;                        // 每日签到配置
+    CONF_LIST_BASE_SERVICE_CONFIG = 11;         // 获取增值服务配置
+    CONF_LIST_BASE_SERVICE_CONFIG_BY_TYPE = 12; // 通过类型获取增值服务配置
+    //CONF_LIST_LONG_TEXT_BY_TYPE = 5;          // 通过类型获取长文本列表
+    //CONF_LIST_ANNOUNCEMENT_BASE = 6;          // 获取公告基础列表
+    //CONF_GET_ANNOUNCEMENT_BY_ID = 7;          // 通过公告id获取公告内容
+    //CONF_LIST_PRODUCT_BY_GAIN_TYPE = 8;       // 根据购买类型获取商城商品配置
+    //CONF_LIST_ACTIVITY_AWARD_BY_ID_LIST = 9;  // 根据id列表获取活动奖励
+    //CONF_GET_ACTIVITY_AWARD_BY_ID = 10;       // 根据id获取活动奖励
+    //CONF_LIST_GAME_ROOM_DETAIL = 11;          // 获取场次列表
+    //CONF_GET_LATEST_VERSION = 12;             // 获取最新的版本信息
+    //CONF_LIST_CLUB_GAME_CONF_BY_GAME_ID = 13; // 通过gameId获取俱乐部游戏配置列表
+    //CONF_LIST_CLUB_OPTION_DESCRIPTION = 14;   // 获取俱乐部玩法选项描述
+    CONF_LIST_CLUB_LEVEL = 15;                    // 俱乐部等级配置
+    CONF_LIST_HALL_PROPS_INFO = 16;             // 获取大厅道具配置
+    CONF_LIST_ROOM_FILTER = 17  ;               //房间筛选
+    
+    
+    //DYN_GET_DESK_CONF_BY_ROOM_ID = 50;        // 通过服务id和roomid获取桌子配置
+    //DYN_LIST_DESK_INFO_BY_DESK_ID_LIST = 51;  // 通过桌子id列表获取桌子信息列表
+    DYN_GET_TABLE_LIST = 52;                    // 取桌子列表
+    
+    MATCH_SIGN_UP = 100;                           //报名
+    MATCH_QUIT = 101;                              //取消报名
+    MATCH_REPURCHASE = 102;                        //重购
+    MATCH_ADDITIONAL = 103;                        //增购
+    MATCH_JACKPOT = 104;                           //奖池
+    MATCH_PLAYER_COUNT = 105;                      //报名人数
+    MATCH_PLAYER_INFO = 106;                       //玩家信息
+    MATCH_GAME_INFO = 107;                         //游戏信息
+    MATCH_USER_SIGN_UP_INFO = 108;                 //用户报名信息
+    MATCH_USER_SIGN_UP_FLAG = 109;                 //用户是否报名比赛
+    MATCH_LIST_MATCH_REWARD = 110;                 //获取比赛奖励信息
+    E_SNG_INFO_LIST_REQ = 111;
+    E_SNG_INFO_LIST_RESP = 112;
+    E_SNG_CONFIG_REQ = 113;
+    E_SNG_CONFIG_RESP = 114;
+    E_SNG_PROCESS_RANKING_LIST_REQ = 115;
+    E_SNG_PROCESS_RANKING_LIST_RESP = 116;
+    E_SNG_PROCESS_REFRESH_RANKING_LIST_REQ = 117;
+    E_SNG_PROCESS_REFRESH_RANKING_LIST_RESP = 118;
+    E_AI_PROCESS_ROOM_LIST_REQ = 119;
+    E_AI_PROCESS_ROOM_LIST_RESP = 120;
+    //MATCH_LIST_CURRENT_MATCH = 100;              // 获取当前参赛列表
+    //MATCH_LIST_MATCH_AWARD_BY_MATCH_ID = 101;    // 根据比赛id获取奖品列表
+    //MATCH_BATCH_GET_MATCH_ID_AND_PLAYERS = 102;  // 批量获取比赛id与参数人数
+    //MATCH_LIST_MATCH_CONFIG_GAME = 103;          // 查询比赛游戏配置列表
+    //MATCH_GET_MATCH_KNOCK_OUT_INFO = 104;        // 查询比赛退赛信息
+    //MATCH_COUNT_MATCH_RECORD = 105;              // 获取比赛记录总数
+    //MATCH_LIST_MATCH_RECORD = 106;               // 获取比赛记录列表
+    //MATCH_GET_MATCH_RESULT = 107;                // 获取比赛结果
+    //MATCH_GET_USER_STATUS_ON_MATCH = 108;        // 获取用户所在比赛的状态
+    //MATCH_GET_ROOM_ID_BY_TEMPLATE_ID = 109;      // 根据模板id获取roomId
+    
+    //LOGIN_GUEST = 150;                        // 游客登录
+    //LOGIN_WECHAT = 151;                       // 微信登录
+    //LOGIN_CACHE = 152;                        // 缓存登录
+    LOGIN_LOGOUT = 153;                         // 登出
+    LOGIN_DEVICE = 154;                         // 设备登录
+    USER_LOGIN = 155;                           // 账号登录
+    USER_REGISTER = 156;                        // 账号注册
+    LOGIN_PHONE_ACCOUNT = 157;                  // 手机账号登录
+    //LOGIN_PHONE_ACCOUNT_CACHE = 158;          // 手机账号缓存登录
+    //LOGIN_PHONE_ACCOUNT_LIST = 159;           // 手机账号登录列表
+    //LOGIN_PHONE_ACCOUNT_DELETE = 160;         // 删除手机账号
+    LOGIN_GOOGLE = 161;                         // google 登录
+    LOGIN_FACEBOOK = 162;                       // facebook 登录
+    LOGIN_QUICK = 163;                          // 快速登录
+    USER_ROUNTER = 164;                         // 获取网关信息
+    LOGIN_APPLE = 165;
+    
+    USER_GET_USER_DETAIL = 200;                    // 获取用户详情
+    USER_GET_USER_BASIC = 201;                     // 获取用户基本信息
+    USER_GET_USERACCOUNT = 202;                    // 获取用户账户
+    USER_UPDATE_USER_REAL_NAME = 203;              // 实名认证
+    //USER_BIND_AGENT = 204;                       // 绑定代理
+    //USER_MODIFY_SAFE_GOLD = 205;                 // 修改保险箱金币
+    USER_TRANSFER_ACCOUNT = 206;                   // 转账
+    USER_LIST_USER_BASIC = 207;                    // 批量获取用户基本信息
+    USER_UPDATE_USER_SIGNATURE = 208;              // 修改个性签名
+    USER_SEND_PHONE_CODE = 209;                    // 发送手机验证码
+    // USER_UPDATE_USER_BASIC = 210;                  // 修改用户基本信息, 头像、性别、昵称
+    //USER_UPDATE_PHONE_PASSWORD = 211;            // 修改用户手机账号密码
+    USER_BIND_PHONE_ACCOUNT = 212;                 // 绑定手机账号
+    USER_UPDATE_USER_INFO = 213;                   // 修改用户信息
+    // USER_LIST_RANDOM_NICKNAME = 214;            // 随机昵称
+    USER_FRIEND_BASIC = 215;                       // 好友信息
+    // USER_FRIEND_BASIC_BY_NAME = 216;            // 昵称查询好友信息
+    USER_GET_USER_REWARD = 217;                    // 用户奖励信息
+    USER_MODIFY_USER_SETTING = 218;                // 修改用户设置
+    USER_GET_SEASON_INFO = 219;                    // 获取用户赛季信息
+    USER_LIST_USER_ACCOUNT = 220;                  // 批量获取用户账户信息
+    USER_MODIFY_EXCHANGE_PWD = 221;                // 修改兑换登录密码
+    USER_BIND_THIRDPARTY_ACCOUNT = 222;            // 绑定三方账号
+    USER_ID_BY_SHOW = 223;
+
+    //ROOM_CREATE_ROOM = 250;                       // 开房
+    //ROOM_COUNT_ROOM_RECORD = 251;                 // 获取用户房间记录总数
+    //ROOM_LIST_ROOM_RECORD = 252;                  // 获取房间列表
+    //ROOM_GET_ROOM_ROUND_DETAIL = 253;             // 获取房间的各局战绩详情
+    //ROOM_GET_ROOM_TOTAL_RESULT = 254;             // 获取房间总战绩
+    //ROOM_GET_ROOM_RECORD_CONFIG = 255;            // 获取房间玩法配置
+    //ROOM_GET_ROOM_ID_BY_ROOM_KEY = 256;           // 根据roomKey获取roomId
+    //ROOM_GET_VIDEO_ADDRESS_BY_SHARE_CODE = 257;   // 根据分享码获取录像地址
+    //ROOM_GET_CURRENT_ROOM_CONFIG = 258;           // 获取当前房间配置
+    
+    //ACTIVITY_GET_SIGN_IN = 300;                   // 获取签到信息
+    //ACTIVITY_SIGN_IN = 301;                       // 签到
+    //ACTIVITY_SHARE = 302;                         // 用户分享
+    
+    //FILE_UPLOAD_FILE = 350;                       // 上传文件
+    
+    // NICKNAME_RANDOM_NICKNAME = 360;                 // 获取随机昵称
+    
+    //MAP_GET_ROOM_STATUS_OF_USER = 400;      // 获取用户所在房间状态
+    USER_STATE_GET_GAME_STATE = 400;          // 获取用户游戏状态
+    USER_STATE_BATCH_ONLINE_STATE = 401;      // 批量取在线状态
+    USER_STATE_COUNT_STATISTICS = 402;        // 统计在线数量
+    USER_STATE_BATCH_GAME_STATE = 403;        // 批量取用户游戏状态
+    USER_STATE_ZERO_ONLINE_UPDATE = 404;      // 在线用户零点更新
+
+    USER_ACTION_REPORT_STATISTICS = 450;      // 用户行为上报统计
+
+    //CLUB_INFO_COUNT_CLUB = 500;            // 获取用户俱乐部总数
+    CLUB_INFO_LIST_CLUB = 501;             // 获取俱乐部列表
+    CLUB_INFO_CREATE_CLUB = 502;           // 创建俱乐部
+    CLUB_INFO_JOIN_CLUB = 503;             // 加入俱乐部
+    CLUB_INFO_EXIT_CLUB = 504;             // 退出俱乐部
+    CLUB_INFO_GET_CLUB_DETAIL = 505;       // 获取俱乐部详情
+    CLUB_INFO_UPDATE_CLUB = 506;           // 更新俱乐部
+    CLUB_INFO_DISMISS_CLUB = 507;          // 解散俱乐部
+    //CLUB_INFO_GET_CLUB_BASIC = 508;        // 获取俱乐部概要
+    //CLUB_INFO_GET_CLUB_ACCOUNT = 509;      // 获取俱乐部账户
+    //CLUB_INFO_RECHARGE_CLUB_ACCOUNT = 510; // 充值俱乐部
+    CLUB_INFO_LIST_USER_APPLY = 511;         // 获取用户申请列表
+    //CLUB_INFO_UPDATE_APPLY = 512;          // 更新用户申请
+    CLUB_INFO_LIST_ALL_USER = 513;           // 获取成员列表
+    //CLUB_INFO_UPDATE_MEMBER_TYPE = 514;    // 变更成员类型
+    CLUB_INFO_KICKOUT_USER = 515;            // 踢出成员
+    //CLUB_INFO_GET_CLUB_ROLE = 516;         // 获取俱乐部角色
+    CLUB_AUDIT_APPLY = 517;                     //审核入会请求
+    CLUB_APPLY_LIST = 518;                     //俱乐部申请列表
+    
+    //CLUB_ROOM_CREATE_CLUB_ROOM_CONFIG = 550;          // 创建俱乐部房间玩法
+    //CLUB_ROOM_UPDATE_CLUB_ROOM_CONFIG = 551;          // 更新俱乐部房间玩法
+    //CLUB_ROOM_DELETE_CLUB_ROOM_CONFIG = 552;          // 删除俱乐部房间玩法
+    //CLUB_ROOM_LIST_CLUB_ROOM_CONFIG = 553;            // 获取俱乐部房间玩法列表
+    //CLUB_ROOM_COUNT_CLUB_ROOM_RECORD = 554;           // 获取俱乐部房间记录总数
+    //CLUB_ROOM_LIST_CLUB_ROOM_RECORD = 555;            // 获取俱乐部房间记录
+    //CLUB_ROOM_COUNT_OWNER_CLUB_ROOM_RECORD = 556;     // 获取俱乐部群主房间记录总数
+    //CLUB_ROOM_LIST_OWNER_CLUB_ROOM_RECORD = 557;      // 获取俱乐部群主房间记录
+    //CLUB_ROOM_GET_CLUB_ROOM_ROUND_DETAIL = 558;       // 获取俱乐部房间的各局战绩详情
+    //CLUB_ROOM_GET_CLUB_ROOM_TOTAL_RESULT = 559;       // 获取俱乐部房间总战绩
+    //CLUB_ROOM_GET_CLUB_VIDEO_ADDRESS = 560;           // 获取俱乐部录像
+    //CLUB_ROOM_LIST_CLUB_BEGIN_DESK_ID = 561;          // 查询俱乐部当前桌子ID列表
+    //CLUB_ROOM_LIST_CLUB_BEGIN_DESK_DETAIL = 562;      // 查询俱乐部已开始桌子信息
+    //CLUB_ROOM_GET_CLUB_ROOM_CONFIG = 563;             // 查询俱乐部部房间玩法
+    
+    //CLUB_DYNAMIC_LIST_CLUB_CURRENT_DESK = 600;        // 查询俱乐部当前桌子信息
+    //CLUB_DYNAMIC_DISMISS_CLUB_CURRENT_DESK = 601;     // 解散俱乐部当前桌子信息
+    
+    //STATISTIC_LIST_TOTAL_GOLD_RANK = 650;             // 查询金币财富榜
+    //STATISTIC_LIST_DAILY_WIN_GOLD_RANK = 651;         // 查询日赚金币榜
+    //HISTORY_COUNT_TRANSFER_RECORD = 700;              // 查询历史转账记录总数
+    //HISTORY_LIST_TRANSFER_RECORD = 701;               // 查询历史转账记录列表
+    
+    FRIENDS_ADD = 800;                                    //添加好友
+    FRIENDS_DELETE = 801;                                //删除好友
+    FRIENDS_QUERY = 802;                                //查询好友列表
+    FRIENDS_QUERYAPPLICANT = 803;                       //好友申请列表
+    FRIENDS_AGREETOADD = 804;                           //同意或拒绝添加请求
+    FRIENDS_AGREETOADD_NOTICE = 805;                    //同意或拒绝添加通知
+    FRIENDS_ONLINE_NOTFRIEND_QUERY = 806;               //查询在线非好友列表
+    FRIENDS_QUERY_GIVE_INFO = 807;                      //查询好友赠送信息
+    FRIENDS_CHAT_QUERY = 808;                           //查询聊天好友列表
+    FRIENDS_CHAT_DELETE = 809;                          //删除聊天好友
+
+    CHAT_PRIVATE = 850;                                 //私聊
+    QUERY_CHAT_RECORDS = 851;                           //查询好友聊天记录
+    CHAT_UPDATE_RECORDS = 852;                          //更新聊天记录状态
+    QUERY_USERLIST_CHAT_RECORDS = 853;                  //查询好友列表聊天记录
+
+    QUERY_RANK_BOARD = 900;                                //查询排行榜(0-金币/1-等级)
+    QUERY_FRIENDS_RANK_BOARD = 901;                        //查询好友排行榜(0-金币/1-等级/2-段位)
+    QUERY_FRIENDS_AIRANK_BOARD = 902;                      //查询AI好友排行榜
+
+    MAIL_RECEIVE = 1000;            //拉取邮件
+    MAIL_FETCH_AWARD = 1001;            // 领取奖励
+    MAIL_DELETE = 1002;            //删除邮件
+    MAIL_PUSH_ONLINE = 1003;            //在线推送
+    MAIL_READ = 1004;            //阅读邮件
+    
+    SYS_MSG_RECEIVE = 1010;            //系统信息查询
+    SYS_MSG_PUSH_ONLIEN = 1011;            //系统信息推送
+    
+    
+    MALL_GET_MENU = 1050;            //获取菜单
+    MALL_BUY_GOODS = 1051;            //购买物品
+    
+    SIGNIN_QUERY = 1060;            //查询签到信息
+    SIGNIN_HELLO = 1061;            //签到
+    SIGNIN_RECEIVE_AWARD = 1062;            //领奖
+    SIGNIN_REWARDS_QUERY = 1063;   //查询新手签到已领取奖励
+    SIGNIN_REWARDS_GET = 1064;     //领取新手签到奖励
+    
+    LOTTERY_QUERY = 1070;            //查询
+    LOTTERY_GO = 1071;            //抽奖
+    
+    GOLD_PIG_QUERY = 1100;        //金猪查询
+    GOLD_PIG_PURCHASE = 1101;        //购买金猪
+    GOLD_PIG_KNOCK = 1102;        //敲碎金猪
+
+    TASK_LIST_QUERY = 1200;        //查询任务列表
+    TASK_AWARD_AQUIRE = 1201;        //领取任务奖励
+    TASK_SEASON_REWARDS_QUERY = 1202;//赛季已领取奖励
+    TASK_SEASON_REWARDS_GET = 1203;  //领取赛季奖励
+
+    ACTIVITY_LIST_QUERY = 1250;      //查询活动列表
+    BANKRUPT_REWARDS_QUERY = 1251;   //查询破产救济已领取奖励
+    BANKRUPT_REWARDS_GET = 1252;     //领取破产救济奖励
+    RECHARGE_REWARDS_QUERY = 1253;   //查询充值已领取奖励
+    RECHARGE_REWARDS_GET = 1254;     //领取充值奖励
+
+    GAME_RECORD_QS_USER_ACT_INFO_QUERY = 1301;   //查询经典场用户行为信息
+    GAME_RECORD_KO_USER_ACT_INFO_QUERY = 1321;   //查询比赛场用户行为信息
+    GAME_RECORD_PR_GAME_INFO_QUERY = 1322;   //查询私人场牌局信息
+    GAME_RECORD_PR_GAME_INFO_DELETE = 1323;   //删除私人场牌局信息
+	GAME_RECORD_AI_USER_ACT_INFO_QUERY = 1331;   //查询AI场用户行为信息 
+    GAME_RECORD_AI_USER_BASE_INFO_QUERY = 1332;   //查询AI场用户基础信息 
+    GAME_RECORD_AI_BASE_INFO_QUERY = 1333;   //查询AI场主界面基础信息 
+    GAME_RECORD_AI_USER_CARD_INFO_QUERY = 1334;   //查询AI场用户牌信息 
+    GAME_RECORD_AI_USER_INFO_DELETE = 1335;   //清除AI场用户所有信息
+    GAME_RECORD_AI_USER_ADVANCE_INFO_QUERY = 1336;   //查询AI场用户进阶数据
+    GAME_RECORD_AI_USER_UNLOCK_ADVANCE_INFO = 1337;   //AI场用户解锁进阶数据
+
+    ORDER_YIELD = 1400;            // 生成订单号
+    ORDER_VERRITY = 1401;            // 校验订单号
+    ORDER_CONSUME = 1402;            // 订单消费
+    
+    REDDOT_LIST_DATA = 1500;             // 获取红点数据
+    
+    PUSH_MATCH_BEGIN = 1600;                 //比赛开始
+    PUSH_MULTIPLE_LOGIN = 1601;              //重复登录
+    PUSH_COIN_CHANGE = 1602;                    //货币变更
+    PUSH_CHAT_UPDATE = 1603;                    //聊天消息变更
+    PUSH_TICKET_STATUS = 1604;                  //资格卡核销
+    PUSH_INVITE_PLAYER = 1605;                  //邀请玩家
+    PUSH_ADD_FRIEND = 1606;                     //添加好友
+    PUSH_GAME_UPDATE = 1607;                    //游戏更新通知
+    PUSH_TASK_FINISH = 1608;                    //任务完成
+    PUSH_GIVE_PROPS = 1609;                     //赠送道具
+    PUSH_RECHARGE_REWARDS = 1610;               //充值奖励
+    PUSH_NEW_MAIL_NOTIFY = 1611;                //新邮件通知
+    PUSH_SERVER_UPDATE_NOTIFY = 1612;           //服务器维护
+    PUSH_SERVER_CHANGE_NOTIFY = 1613;           //服务变化通知
+    PUSH_AI_REPORT_DATA = 1614;                 //AI数据推送
+
+    HALL_LIST_CARDS_INFO    = 1700;             //查询卡券详情
+    HALL_ADD_CARDS          = 1701;             //卡券添加
+    HALL_EXCHANGE_CARDS     = 1702;             //卡券兑换
+    HALL_EXCHANGE_CARDS_INFO = 1703;            //卡券兑换详情
+    HALL_LIST_TICKET_DETAIL_INFO = 1704;        //查询门票详情
+    HALL_TICKET_GIFT = 1705;                    //门票赠送
+    HALL_OFFLINE_TICKET_INFO = 1706;            //线下赛事信息
+    HALL_OFFLINE_SIGNUP = 1707;                 //线下赛事报名
+    HALL_TICKET_GIFT_COLLECT = 1708;            //门票领取
+    HALL_TICKET_GIFT_EXT = 1709;                //门票赠送(多资格卡)
+    HALL_TICKET_GIFT_COLLECT_EXT = 1710;        //门票领取（多资格卡）
+    HALL_EXCHANGE_CODE      = 1711;             //兑换码
+
+    HALL_PROPS_INFO_QUERY = 1800;               //查询用户道具
+    HALL_PROPS_GIVE = 1801;                     //赠送用户道具
+    HALL_PROPS_GET = 1802;                      //领取用户道具
+    HALL_PROPS_GIVE_INFO = 1803;                //查询道具赠送信息
+
+    HALL_ROOM_LIST= 1804;                       //获取筛选的房间列表
+    HALL_GET_INIT_WEALTH = 1805;
+
+    HALL_INVITED_CODE_QUERY = 1806;             //邀请码查询
+    HALL_INVITED_AWARD_GET = 1807;              //邀请奖励领取
+    HALL_INVITED_BIND = 1808;                   //绑定邀请码
+    HALL_INVITED_AWARD_QUERY = 1809;            //查询是否领奖
+
+    HALL_NEWHAND_REWARD_LIST = 1810;            //新手列表
+    HALL_NEWHAND_OPTION = 1811;                 //新手操作
+
+    PUSH_RESULT_CODE = 9999; //推送操作码
+}
+
+ //玩家金币流水ID
+enum GOLDFLOW
+{
+    GOLDFLOW_ID_ERROR           = 0;
+    GOLDFLOW_ID_TAX             = 9;        //经典chang台费
+    GOLDFLOW_ID_COMPENSAT       = 9999;     //补偿
+    GOLDFLOW_ID_VISITOR_REGIST  = 10000;    //游客注册
+    GOLDFLOW_ID_INROOM          = 10001;    //进房带入
+    GOLDFLOW_ID_RESULT          = 10002;    //经典场结算
+    GOLDFLOW_ID_CREAT_PRIVATE   = 10003;    //创建私人场消耗
+    GOLDFLOW_ID_FACEBOOK_REGIST = 10004;    //FB注册
+    GOLDFLOW_ID_APPLE_REGIST    = 10005;    //苹果注册
+    GOLDFLOW_ID_CHANGE_NAME     = 10008;    //修改昵称
+    GOLDFLOW_ID_PRIVATE_TAKEN   = 10009;    //私人房带入
+    GOLDFLOW_ID_PRIVATE_CAL     = 10010;    //私人房结算
+
+    GOLDFLOW_ID_SNG_SIGN        = 20001;    //sng报名费
+    GOLDFLOW_ID_DELAY_SIGN      = 20002;    //比赛延迟报名费（MTT）
+    GOLDFLOW_ID_SERVICE_CHARGE  = 20003;    //比赛服务费（MTT）
+    GOLDFLOW_ID_REPURCHASE      = 20004;    //比赛重购费（MTT）
+    GOLDFLOW_ID_ADD_PURCHASE    = 20005;    //比赛增购费（MTT）
+    GOLDFLOW_ID_SNG_RANK_REWARD = 20006;    //sng比赛排名奖励
+    GOLDFLOW_ID_AIDELETE_CHARGE = 20007;    //AI清除数据费用
+    GOLDFLOW_ID_AIADVANCE_CHARGE = 20008;   //AI查询进阶数据费用
+
+    GOLDFLOW_ID_LEVEL_TASK      = 30001;    //冲级任务
+    GOLDFLOW_ID_SIGN_REWARD     = 30002;    //签到奖励
+    GOLDFLOW_ID_TOTAL_SIGN      = 30003;    //累计签到
+    GOLDFLOW_ID_TICKET_CHANGE   = 30004;    //奖券兑换
+    GOLDFLOW_ID_NOVICE_ONLINE   = 30005;    //新手狂欢-在线奖励
+    GOLDFLOW_ID_NOVICE_INGAME   = 30006;    //新手狂欢-在玩奖励
+    GOLDFLOW_ID_NOVICE_SIGN     = 30007;    //新手狂欢-新手签到
+    GOLDFLOW_ID_NOVICE_PLAY     = 30008;    //新手狂欢-新手玩牌
+    GOLDFLOW_ID_LUCKEY_ROTATE   = 30009;    //幸运旋转
+    GOLDFLOW_ID_DAILY_TASK      = 30010;    //每日任务
+    GOLDFLOW_ID_WEEKLY_TASK     = 30011;    //每周任务
+    GOLDFLOW_ID_BANKRUPT_TASK   = 30012;    //破产救济
+    GOLDFLOW_ID_GRADE_REWARD    = 30013;    //段位奖励
+    GOLDFLOW_ID_RANK_REWARD     = 30014;    //排名奖励
+    GOLDFLOW_ID_SUPER_ROTATE    = 30015;    //超级旋转
+    GOLDFLOW_ID_SHARE_REWARD    = 30016;    //邀请奖励
+    GOLDFLOW_ID_BIND_REWARD     = 30017;    //绑定奖励
+
+    GOLDFLOW_ID_MALL_RECHARGE   = 40101;    //商城充值
+    GOLDFLOW_ID_LUCKEY_GIFT     = 40102;    //幸运礼包
+    GOLDFLOW_ID_SPECIAL_GIFT    = 40103;    //特惠礼包
+    GOLDFLOW_ID_NEW_RECHARGE    = 40104;    //新充值优惠任务
+
+    GOLDFLOW_ID_LIMITED_SPECIAL = 50000;    //限时特惠
+    GOLDFLOW_ID_SUPER_SPECIAL   = 50001;    //超值优惠
+    GOLDFLOW_ID_DAILY_SPECIAL   = 50002;    //每日优惠
+    GOLDFLOW_ID_ADMIN_CHANGE    = 50003;    //管理员账户变更
+    GOLDFLOW_ID_EXCHANGE_CODE   = 50004;    //兑换码
+    GOLDFLOW_ID_FRIENDS_GIVE    = 50005;    //好友赠送
+    GOLDFLOW_ID_MAIL_REWARD     = 50006;    //邮件奖励
+    GOLDFLOW_ID_VISITOR_BANDFB  = 50009;    //游客绑定FB
+
+    GOLDFLOW_ID_AI_CHALLENGE_ENTER = 60001;
+    GOLDFLOW_ID_AI_CHALLENGE_EXIT = 60002;
+    GOLDFLOW_ID_AI_CHALLENGE_ROUND_CAL = 60003;
+
+    GOLDFLOW_ID_AOF_ENTER = 60004;
+    GOLDFLOW_ID_AOF_EXIT = 60005;
+    GOLDFLOW_ID_AOF_CAL = 60006;
+
+    GOLDFLOW_ID_AI1V1_ENTER = 60007;
+    GOLDFLOW_ID_AI1V1_EXIT = 60008;
+    GOLDFLOW_ID_AI1V1_CAL = 60009;
+
+    GOLDFLOW_ID_SH_ENTER = 60010;
+    GOLDFLOW_ID_SH_EXIT  = 60011;
+}
+
+// 服务请求头
+message CommonReqHead
+{
+    ActionName actionName = 1;    // 请求动作名
+    bytes reqBodyBytes = 2;        // 请求数据体
+}
+
+// 服务应答头
+message CommonRespHead
+{
+    sint32 resultCode = 1;            // 请求结果码
+    ActionName actionName = 2;        // 请求动作名
+    bytes respBodyBytes = 3;        // 返回数据体
+}
+
+//推送消息
+enum PushMessageType
+{
+    MESSAGE_TYPE_DEFAULT = 0;
+    USER_ACCOUNT_CHANGE = 10000;       // 用户账户变化（即财富）
+    USER_EXIT_ROOM = 10001;               // 用户退出room
+    USER_EXIT_MATCH = 10002;           // 用户退出比赛
+    CLUB_USER_STATUS_CHANGE = 10100;   // 用户所在的俱乐部会员类型发生变化(管理员与普通会员)，附带: string类型的俱乐部id
+    CLUB_USER_JOIN = 10101;               // 用户加入俱乐部，附带: 俱乐部id:用户id
+    CLUB_USER_KICKOUT = 10102;           // 用户被踢出俱乐部，附带: 俱乐部id
+    CLUB_CONFIG_CHANGE = 10103;           // 俱乐部配置发生变化，附带: string类型的配置id
+    CLUB_INFO_CHANGE = 10104;           // 俱乐部基础信息发生变化（名称或公告）, 附带: 俱乐部id
+    CLUB_DISMISS = 10105;               // 俱乐部被解散，附带: string类型的俱乐部id
+    CLUB_USER_EXIT = 10106;               // 用户退出俱乐部，附带: 俱乐部id:用户id
+}

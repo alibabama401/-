@@ -1,0 +1,121 @@
+syntax = "proto3";
+
+option cc_generic_services = false;
+
+package ChatProto;
+
+//消息类型
+enum MsgType
+{
+    MSG_TYPE_TXT = 0;       //文本
+    MSG_TYPE_TICKET = 1;    //资格卡赠送
+};
+
+//私聊请求
+message ChatPrivateReq
+{
+    sint64   friend_uid = 1;    //好友ID
+    string   msg = 2;           //聊天信息
+    sint32   msgType = 3;       //消息类型
+}
+
+//记录
+message RecordItem
+{
+    sint64   sender = 1;     //发送者
+    sint64   receiver = 2;   //接收者
+    string   content = 3;    //聊天内容
+    sint64   time = 4;       //时间
+    sint32   msgType = 5;    //消息类型
+    sint32   isReaded = 6;   //是否已读: 1-是,0-否
+    sint64   msgID = 7;      //消息唯一ID
+}
+
+//私聊应答
+message ChatPrivateResp
+{
+    RecordItem msg = 1;         //消息
+    sint32 resultCode = 2;      //结果码
+}
+
+//资格卡行为
+enum TicketActionType
+{
+    TICKET_ACTION_TYPE_GIFT = 0;       //赠送
+    TICKET_ACTION_TYPE_RECV = 1;       //领取
+    TICKET_ACTION_TYPE_RETRIEVE = 2;   //回收
+};
+
+//门票状态
+enum E_Ticket_Status
+{
+    E_TICKET_STATUS_NO_EXCHANGED = 0;  //未兑换
+    E_TICKET_STATUS_NOT_USED = 1;      //未使用
+    E_TICKET_STATUS_USED = 2;          //待取票(已使用)
+    E_TICKET_STATUS_TICKETS = 3;       //已取票
+    E_TICKET_STATUS_INVALID = 4;       //无效
+};
+
+//门票详情
+message TicketDetailInfo
+{
+    sint32 type = 1;                    //道具类型
+    string name = 2;                    //道具名称
+    repeated string serialNumber = 3;   //序列号
+    string qrCode = 4;                  //二维码
+    sint32 expiredTime = 5;             //有效日期
+    sint32 status = 6;                  //状态
+    string icon = 7;                    //图标
+    sint64 uid = 8;                     //归属uid
+    sint32 propsID = 9;                 //道具ID
+};
+
+//资格卡
+message TicketInfo
+{
+    sint64 from = 1;  //源uid
+    sint64 to = 2;    //目的uid
+    sint32 actionType = 3;              //卡行为
+    TicketDetailInfo detail = 4;        //卡详情
+};
+
+//查询好友聊天记录请求
+message QueryChatRecordsReq
+{
+    sint64 friend_uid = 1;    //好友ID
+}
+
+//查询好友聊天记录应答
+message QueryChatRecordsResp
+{
+    repeated RecordItem records = 1;
+    sint32 resultCode = 2;    //结果码
+}
+
+//更新聊天记录状态请求
+message UpdateChatRecordsReq
+{
+    sint64 friend_uid = 1;    //好友ID
+    repeated RecordItem records = 2;
+}
+
+//更新聊天记录状态应答
+message UpdateChatRecordsResp
+{
+    sint32 resultCode = 1;    //结果码
+    sint64 friend_uid = 2;    //好友ID
+    repeated RecordItem records = 3;
+}
+
+//查询好友列表聊天记录请求
+message QueryUserListChatRecordsReq
+{
+    repeated sint64 uidList = 1;
+}
+
+//查询好友列表聊天记录应答
+message QueryUserListChatRecordsResp
+{
+    sint32 resultCode = 1;    //结果码
+    map<sint64, QueryChatRecordsResp> recordsList = 2;
+}

@@ -1,0 +1,515 @@
+syntax = "proto3";
+
+option cc_generic_services=false;
+
+package HallProto;
+
+    //道具类型
+    enum E_Props_Type
+    {
+        E_PROPS_TYPE_UNKNOWN = 0;           //未知
+        E_PROPS_TYPE_POINTS = 1;            //奖励积分
+        E_PROPS_TYPE_MATCH_POINTS = 2;      //挑战积分
+        E_PROPS_TYPE_MATCH_TICKETS = 3;     //赛事门票
+    };
+
+    //道具ID
+    enum E_Props_ID
+    {
+        E_PROPS_ID_UNKNOWN = 0;
+        E_PROPS_ID_POINTS = 10000;          //积分
+        E_PROPS_ID_REWARD_POINTS = 20000;   //奖励积分
+        E_PROPS_ID_AI_TICKETS = 30000;      //AI挑战券
+        E_PROPS_ID_AI_POINTS = 40000;       //AI挑战积分
+        E_PROPS_ID_MATCH_TICKETS = 50000;   //赛事资格卡
+    };
+
+    //道具详情
+    message cardsInfo
+    {
+        sint32 propsID = 1;     //道具ID
+        sint64 count = 2;       //数量
+        sint32 propsType = 3;   //道具大类
+        string name = 4;        //道具名字
+        string iconUrl = 5;     //道具图标
+        sint32 canGift = 6;     //可赠送
+        sint32 canOverlay = 7;  //可叠加
+        sint64 value = 8;       //道具价值，对应积分
+        sint32 expiredTime = 9; //有效期，0:永久有效
+        sint32 uniqueID = 10;   //道具唯一标识
+    };
+
+    //查询道具详情应答
+    message ListCardsInfoResp
+    {
+        sint32 resultCode = 1;           //结果码
+        repeated cardsInfo cards = 2;  //卡信息
+    };
+
+    //资格卡添加请求
+    message AddCardsReq
+    {
+        string serialNumber = 2;  //序列号
+    };
+
+    //资格卡添加应答
+    message AddCardsResp
+    {
+        sint32 resultCode = 1;           //结果码
+    };
+
+    //资格卡兑换详情
+    message exchangeCardsInfo
+    {
+        cardsInfo srcCards   = 1; //源卡券信息
+        cardsInfo dstCards   = 2; //目的卡券信息
+        sint64 dstCardsCount = 3; //目的卡券剩余数量
+        sint32 exchangeId    = 4; //兑换ID
+    };
+
+    //查询资格卡兑换详情应答
+    message ListExchangeCardsInfoResp
+    {
+        sint32 resultCode = 1;         //结果码
+        repeated exchangeCardsInfo cards = 2;  //兑换信息
+        sint32 exchangeJump = 3; //兑换中心跳转:0-关闭,1-开启
+    };
+
+    //道具信息
+    message exchangeCards
+    {
+        sint32 propsID = 1;     //道具ID
+        sint64 count = 2;       //数量
+    };
+
+    //资格卡兑换请求
+    message exchangeCardsReq
+    {        
+        exchangeCards src = 1;  //源卡券
+        exchangeCards dst = 2;  //目的卡券
+        sint32 exchangeId = 3;  //兑换ID
+    };
+
+    //资格卡兑换应答
+    message exchangeCardsResp
+    {
+        sint32 resultCode = 1;  //结果码
+        exchangeCards src = 2;  //源卡券
+        exchangeCards dst = 3;  //目的卡券
+        sint32 exchangeId = 4;  //兑换ID
+    };
+
+    //兑换码请求
+    message exchangeCodeReq
+    {        
+        string codestr = 1;     //兑换码
+        string api = 2;         //包名
+    };
+
+    //兑换码请求
+    message exchangeCodeItem
+    {        
+        sint32 rewardid = 1;
+        sint64 rewardcount = 2;
+    };
+
+    //兑换码应答
+    message exchangeCodeResp
+    {        
+        sint32 resultCode = 1;  //兑换结果  0-成功 
+        repeated exchangeCodeItem data = 2; //奖励数据
+    };
+
+    //门票状态
+    enum E_Ticket_Status
+    {
+        E_TICKET_STATUS_NO_EXCHANGED = 0;  //未兑换
+        E_TICKET_STATUS_NOT_USED = 1;      //未使用
+        E_TICKET_STATUS_USED = 2;          //待取票(已使用)
+        E_TICKET_STATUS_TICKETS = 3;       //已取票
+        E_TICKET_STATUS_INVALID = 4;       //无效
+    };
+    //门票详情
+    message TicketDetailInfo
+    {
+        sint32 type = 1;            //道具类型
+        string name = 2;            //道具名称
+        string serialNumber = 3;    //序列号
+        string qrCode = 4;          //二维码
+        sint32 expiredTime = 5;     //有效日期
+        sint32 status = 6;          //状态
+        string icon = 7;            //图标
+        sint32 propsID = 8;         //道具ID
+        sint32 count = 9;           //同类型数量
+    };
+
+    //门票赠送数据
+    message TicketGiftInfo
+    {
+        string serialNumber = 1;        //序列号
+        sint32 date = 2;                //过期日期
+    };
+    
+    //查询门票详情应答
+    message ListTicketDetailInfoResp
+    {
+        sint32 resultCode = 1;                      //结果码
+        repeated TicketDetailInfo detail = 2;       //门票信息
+        repeated TicketGiftInfo sendGiftInfo = 3;   //赠送出去的门票
+        repeated TicketGiftInfo recvGiftInfo = 4;   //收到的门票
+    };
+
+    //门票赠送请求
+    message GiftTicketReq
+    {
+        string serialNumber = 1;    //序列号
+        sint64 dstUid = 2;          //目的用户
+    };
+
+    //门票赠送应答
+    message GiftTicketResp
+    {
+        sint32 resultCode = 1;           //结果码
+    };
+
+    //门票赠送请求
+    message GiftTicketExtReq
+    {
+        sint64 dstUid = 2;  //目的用户
+        sint32 type = 3;  //类型
+        sint32 num = 4;   //数量
+    };
+
+    //门票赠送应答
+    message GiftTicketExtResp
+    {
+        sint32 resultCode = 1;     //结果码
+    };
+
+    //领取门票请求
+    message CollectTicketReq
+    {
+        string serialNumber = 1;  //序列号
+    };
+
+    //领取门票应答
+    message CollectTicketResp
+    {
+        sint32 resultCode = 1;           //结果码
+    };
+
+    //领取门票请求
+    message CollectTicketExtReq
+    {
+        string transactionID = 2;  //交易ID
+    };
+
+    //领取门票应答
+    message CollectTicketExtResp
+    {
+        sint32 resultCode = 1;           //结果码
+    };
+
+    //报名状态
+    enum E_SignUp_Status
+    {
+        E_SIGNUP_STATUS_UNKNOWN = 0;     //未报名
+        E_SIGNUP_STATUS_SIGNED  = 1;     //已报名
+    };
+
+    //线下赛事信息
+    message OfflineTicketItem
+    {
+        string name = 1;            //赛事名称
+        string address = 2;         //赛事地点
+        sint32 date = 3;            //赛事日期
+        string jackpool = 4;        //赛事奖池
+        string ticketValue = 5;     //赛事票价
+        sint32 ticketID = 6;        //资格卡ID
+        sint32 deadline = 7;        //截止时间
+        sint32 status = 8;          //报名状态
+        TicketDetailInfo detail = 9;  //资格卡详情
+    };
+
+    //线下赛事信息应答
+    message OfflineTicketInfoResp
+    {
+        sint32 resultCode = 1;                      //结果码
+        repeated OfflineTicketItem tickets = 2;     //门票信息
+    };
+
+    //线下赛事报名请求
+    message OfflineSignUpReq
+    {
+        sint32 ticketID = 1;        //资格卡ID
+    };
+
+    //线下赛事报名应答
+    message OfflineSignUpResp
+    {
+        sint32 resultCode = 1;                      //结果码,0--正常，其他--错误
+    };
+
+    //用户道具类型
+    enum E_UserProps_Type
+    {
+        E_USERPROPS_TYPE_UNKNOWN       = 0;  //未知
+        E_USERPROPS_TYPE_POINTS        = 1;  //积分
+        E_USERPROPS_TYPE_CHIPS         = 2;  //筹码
+        E_USERPROPS_TYPE_TICKET        = 3;  //奖券
+        E_USERPROPS_TYPE_MATCH_TICKETS = 5;  //赛事门票
+    };
+
+    //用户道具操作
+    enum E_UserProps_Opt
+    {
+        E_USERPROPS_OPT_UNKNOWN = 0;  //未知
+        E_USERPROPS_OPT_ADD     = 1;  //添加
+        E_USERPROPS_OPT_DELETE  = 2;  //删除
+    }
+
+    //道具变更统一响应数据
+    message UserPropsChange
+    {
+        E_UserProps_Opt optType = 1;  //操作类型
+        cardsInfo propDetail    = 2;  //道具详情
+    };
+
+    //赠送用户道具请求
+    message UserPropsGiveReq
+    {
+        sint64 dstUid        = 1;  //目的用户
+        cardsInfo propDetail = 2;  //道具详情
+    };
+
+    //赠送用户道具应答
+    message UserPropsGiveResp
+    {
+        sint32 resultCode           = 1;//结果码
+        sint64 dstUid               = 2;//目的用户
+        UserPropsChange propsChange = 3;//道具变更统一响应数据
+    };
+
+    //领取用户道具请求
+    message UserPropsGetReq
+    {
+        sint32 uniqueID      = 1;  //赠送唯一标识,-1表示领取全部
+        cardsInfo propDetail = 2;  //道具详情
+    };
+
+    //领取用户道具应答
+    message UserPropsGetResp
+    {
+        sint32 resultCode = 1;//结果码
+        sint32 uniqueID   = 2;//赠送唯一标识,-1表示领取全部
+        repeated UserPropsChange propsChange = 3;//道具变更统一响应数据
+    }
+
+    //道具赠送详情
+    message UserPropsGiveDetail
+    {
+        sint64 dstUid      = 1;//赠送用户ID
+        sint32 propID      = 2;//赠送道具ID
+        sint32 count       = 3;//赠送道具数量
+        sint32 propType    = 4;//赠送道具类型,参考E_UserProps_Type
+        sint32 giveTime    = 5;//赠送道具时间
+        sint32 uniqueID    = 6;//赠送唯一标识
+        sint32 expiredTime = 7;//有效期,0:永久有效
+    };
+
+    //道具赠送信息应答
+    message UserPropsGiveInfoResp
+    {
+        sint32 resultCode = 1;  //结果码
+        repeated UserPropsGiveDetail giveDetail = 2;//赠送道具详情
+    };
+
+    //活动类型
+    enum E_ACTIVITY_TYPE
+    {
+        E_ACTIVITY_TYPE_UNKNOWN    = 0;  //未知
+        E_ACTIVITY_TYPE_NOVICE     = 1;  //新手狂欢
+        E_ACTIVITY_TYPE_RECHARGE   = 2;  //充值优惠
+        E_ACTIVITY_TYPE_ROTATE     = 3;  //幸运转盘
+        E_ACTIVITY_TYPE_SIGNIN     = 4;  //每日签到
+        E_ACTIVITY_TYPE_ACTIVITIES = 5;  //精彩活动
+    };
+
+    //查询活动列表应答
+    message ActivityListQueryResp
+    {
+        sint32 resultCode    = 1;
+        repeated sint32 data = 2;
+    }
+
+    //破产救济奖励
+    message BankruptRewards
+    {
+        sint32 rewardTimes = 1;//领取次数
+        sint32 rewardID    = 2;//奖励ID
+    }
+
+    //查询破产救济已领取奖励应答
+    message BankruptRewardsQueryResp
+    {
+        sint32 resultCode  = 1;
+        sint32 rewardTimes = 2;//已领取次数
+    }
+
+    //领取破产救济奖励请求
+    message BankruptRewardsGetReq
+    {
+        BankruptRewards reward = 1;//破产救济奖励
+    }
+
+    //领取破产救济奖励应答
+    message BankruptRewardsGetResp
+    {
+        sint32 resultCode      = 1;
+        BankruptRewards reward = 2;
+    }
+
+    //充值类型
+    enum E_RECHARGE_TYPE
+    {
+        E_RECHARGE_TYPE_UNKNOWN = 0;  //未知
+        E_RECHARGE_TYPE_NOVICE  = 1;  //新手充值
+        E_RECHARGE_TYPE_FIRST   = 2;  //首次充值
+        E_RECHARGE_TYPE_DAY     = 3;  //每日充值
+    }
+
+    //查询充值已领取奖励请求
+    message RechargeRewardsQueryReq
+    {
+        sint32 type = 1;//充值类型
+    }
+
+    //充值奖励
+    message RechargeRewards
+    {
+        sint32 dayIndex     = 1;//序号(首次充值领奖时为二进制位第几位,默认从1开始;每日充值时,1-前一天,2-今天)
+        sint32 rechargeId   = 2;//充值ID
+        sint32 rewardId     = 3;//奖励ID
+        sint32 getStatus    = 4;//奖励领取状态
+        sint32 beginTime    = 5;//激活任务开始时间
+        sint32 endTime      = 6;//激活任务结束时间
+        repeated sint32 taskList = 7;//激活任务列表
+    }
+
+    //查询充值已领取奖励应答
+    message RechargeRewardsQueryResp
+    {
+        sint32 resultCode   = 1;
+        sint32 type         = 2;
+        sint32 rechargeId   = 3;//首次充值ID
+        sint32 rechargeTime = 4;//首次充值时间
+        sint32 getStatus    = 5;//是否已领取新手期充值奖励:1-是,0-否(新手充值时才有效)
+        string getStatusBit = 6;//领取首次充值返利天数奖励状态位:二进制位1-是,0-否(首次充值时才有效)
+        repeated RechargeRewards rewards = 7;//每日充值领取奖励状态(每日充值时才有效)
+    }
+
+    //领取充值奖励请求
+    message RechargeRewardsGetReq
+    {
+        sint32 type = 1;//充值类型
+        RechargeRewards reward = 2;
+    }
+
+    //领取充值奖励应答
+    message RechargeRewardsGetResp
+    {
+        sint32 resultCode = 1;
+        sint32 type       = 2;
+        RechargeRewards reward = 3;
+    }
+
+    message QueryFriendsRankReq
+    {    
+        sint32 type       = 1;//0-筹码,1-等级,2-段位
+        sint32 seasonType = 2;//0-无效值,1-当前赛季,2-上次赛季,type为2时才有效
+    }
+
+    message FriendsRankItem
+    {
+        sint64 uid      = 1; //标识
+        sint64 gold     = 2; //金币
+        sint64 level    = 3; //等级
+        sint32 starNum  = 4; //星数
+        sint32 danGrade = 5; //段位
+    }
+
+    message QueryFriendsRankResp
+    {    
+        sint32 resultCode = 1;
+        sint32 type = 2;
+        repeated FriendsRankItem list = 3;
+        sint32 seasonType = 4;
+    }
+
+    message RoomTableStatReq
+    {
+        sint32 roomType = 1;
+        sint32 seatNum = 2; //
+        sint32 blindLevel = 3;
+        sint32 optionType = 4; //全部 0 ;快速 1; 常规 2  
+        sint32 type = 5; //1:自由入桌 2：快速入桌
+    }
+
+    message RoomTableStatResp
+    {
+        sint32 resultCode = 1;
+        repeated string roomID = 2;
+    }
+
+    //AI场用户行为信息应答
+    message AIUserActInfoResp
+    {
+        sint32 resultCode = 1;         //结果码
+        sint32 intoPoolRate = 2;       //入池率
+        sint32 intoPoolWinRate = 3;    //入池胜率
+        sint32 preRaiseRate = 4;       //翻牌前加注率
+        sint32 watchRate = 5;          //看翻牌率
+        sint32 turnWinRate = 6;        //翻牌后胜率
+        sint32 showCardRate = 7;       //摊牌率
+        sint32 showCardWinRate = 8;    //摊牌胜率
+        sint32 reRaiseRate = 9;        //再加注率
+        sint32 continueBetRate = 10;   //持续下注率
+        sint32 radicalRate = 11;       //激进率
+        bytes bestCards= 12;           //最佳手牌
+    }
+
+    //AI场用户请求进阶数据
+    message AIUserAdvanceInfoReq
+    {
+        sint32 type = 1;   //1-进阶 2-不需要进阶数据
+        sint64 uid = 2;    //用户id
+    }
+
+    //AI场用户进阶数据应答
+    message AIUserAdvanceInfoResp
+    {
+        sint32 resultCode = 1;     //结果吗 0-成功
+        sint32 shandcount = 2;     //七天手数
+        sint32 swincount = 3;      //七天获胜手数
+        sint64 sgold = 4;          //七天盈利
+        sint32 thhandcount = 5;    //30天手数
+        sint32 thwincount = 6;     //30天获胜手数
+        sint64 thgold = 7;         //30天盈利
+        sint32 allhandcount = 8;   //累计手数
+        sint32 allwincount = 9;    //累计获胜手数
+        sint64 allgold = 10;       //累计盈利
+        sint32 badvanced = 11;     //是否能查看进阶数据0-可以 1-不可以
+        sint64 unlockcost = 12;    //解锁花费
+    }
+
+    //AI场用户解锁进阶数据应答
+    message AIUserUnLockAdvanceInfoResp
+    {
+        sint32 resultCode = 1;  //结果码 0-成功
+    }
+
+    //AI场用户清除数据应答
+    message AIUserDeleteInfoResp
+    {
+        sint32 resultCode = 1;  //结果码 0-成功 
+    }

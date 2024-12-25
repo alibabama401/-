@@ -1,0 +1,157 @@
+syntax = "proto3";
+
+option cc_generic_services = false;
+
+package XGameRetCode;
+
+//系统错误码
+enum RetCodeEnum
+{
+    // SYS_INTERNAL_ERROR = -1;    //"系统内部错误"
+    
+    //公共
+    SUCCESS = 0;                 //"正常"
+    SYS_ERROR = 1;               //"系统错误"
+    SYS_BUSY = 2;              //"系统繁忙"
+    INNER_ERROR = 3;        //"内部错误"
+    PACKAGE_ERROR = 4;        //"消息包错误"
+    ARG_NULL_ERROR = 5;        //"参数不可为空"
+    ARG_INVALIDATE_ERROR = 6;   //"无效的参数"
+    
+    //登录
+    LOGIN_MULTIPLE_LOGIN = 301;   //"重复登录"
+    LOGIN_PARAM_ERROR = 302;      //"登录参数错误" 
+    LOGIN_SERVER_ERROR = 303;     //"服务器内部错误"
+    LOGIN_BLACK_LIST = 304;       //"黑名单"
+    LOGIN_PASSWD_ERROR = 305;           //"账号或密码错误"
+    LOGIN_TOKEN_INCONSISTENT = 306;     //"token 不一致"
+    LOGIN_TOKEN_EXPIRED = 307;    //"token 过期"
+    LOGIN_GETHTTP_ERROR = 308;     //"网络请求错误"
+    LOGIN_GETHTTP_DATA_ERROR = 309; //"网络数据错误"
+    LOGIN_GOOGLE_APPID_ERROR = 310; //"appid 错误"
+    LOGIN_GOOGLE_OPENID_ERROR = 311; //"openid错误"
+    LOGIN_FACEBOOK_AUTH_ERROR = 312; //"facebook 校验token错误"
+    LOGIN_FACEBOOK_DATA_ERROR = 313; //"facebook 登录数据错误"
+    
+    //用户信息
+    // USER_INFO_NICKNAME_EXIST = 501;      //昵称已经存在
+    USER_INFO_NICKNAME_NO_CHANGE = 502;  //昵称无变化
+    USER_INFO_NICKNAME_HAVE_SENSITIVE_WORDS = 503;  //含有违禁词
+    USER_INFO_NO_NICKNAME = 504; //无昵称
+    USER_INFO_NICKNAME_SPECIAL_CHARACTER = 505;  //昵称不能含有特殊字符
+    USER_INFO_NO_CHANGE = 506;   //修改信息无变化
+    USER_INFO_PHONE_ALREADY_BIND = 507;//已绑定过手机号
+    USER_INFO_PHONE_AUTH_CODE_ERROR = 508;//验证码不正确
+    USER_INFO_PHONE_AUTH_CODE_LIMIT = 509;//今日验证次数已达上限
+    USER_INFO_EXCHANGE_PWD_INVALID = 510;//密码需要使用字母和数字混合组成
+    USER_INFO_EXCHANGE_PWD_ERROR = 511;//密码不正确
+    USER_INFO_PHONE_AUTH_CODE_OVERDUE = 512;//验证码已失效
+    USER_INFO_PHONE_ALREADY_USED = 513;//手机号已被使用
+    USER_INFO_FACEBOOK_ALREADY_USED = 514;//facebook账号已被使用
+    USER_INFO_ACCOUNT_ALREADY_BIND = 515;//已绑定过账号
+    USER_INFO_PHONE_FORMAT_ERROR = 516;//手机号码格式错误
+
+    //房间
+    ROOM_USER_NO_LOGIN = 1000;          //未登录房间
+    ROOM_GOLD_NOT_ENOUGH = 1001;        //金币不足
+    ROOM_DIAMOND_NOT_ENOUGH = 1002;     //钻石不足
+    ROOM_CHAT_CD = 1003;                //聊天信息过于频繁， 请稍后再试
+    ROOM_ADD_GOLD_SUCCESS = 1004;       //自动补充筹码
+    ROOM_JOIN_QUEUQ_ERR = 1005;         //加入队列失败
+    ROOM_RECOME_INVALID = 1006;         //无效重连请求
+    
+    //游戏
+    GAME_NO_SERVICE_CONFIG = 1101;  //无服务消耗配置
+    GAME_USER_NOT_EXIST = 1102;  //玩家不存在
+    GAME_CHANGE_TABLE_NOT_SIT = 1103;//当前房间缺少有空位的桌子
+    GAME_WAIT_NEXT_GAME = 1104; //等待下一局
+    GAME_TWO_NOT_OPTION = 1105; //连续两局未操作
+    GAME_WAIT_TIMEOUT = 1106; //等待超时，退出房间
+    GAME_WATCH_NOT_EXIST = 1107; //玩家不再旁观列表
+    
+    //比赛
+    MATCH_NO_CONFIG = 1200;             //"无比赛配置"
+    MATCH_SIGNUP_ALREADY = 1201;        //"已报名"
+    MATCH_MAX_SIGNUP_NUMBER = 1202;     //"超过最多报名人数"
+    MATCH_NO_ENTRY_FEE_CONFIG = 1203;   //"无报名费配置"
+    MATCH_GOLD_NOT_ENOUGH = 1204;       //"筹码不足"
+    MATCH_SIGNUP_FAIL = 1205;           //"报名失败"
+    MATCH_START_NOT_ALLOW_QUIT = 1206;  //"比赛开始不能退赛"
+    MATCH_NO_SIGNUP = 1207;             //"未报名"
+    MATCH_NOT_START = 1208;             //"比赛未开始"
+    MATCH_CARD_ENOUGH = 1209;           //"足够的记分牌" "当前记分牌大于初始分数无法重购"
+    MATCH_NOT_IN_REPURCHASE = 1210;     //"不在重购阶段"
+    MATCH_NOT_IN_ADDITIONAL = 1211;     //"不在增购阶段"
+    MATCH_NO_REPURCHASE_CHANCE = 1212;  //"无重购机会"
+    MATCH_NO_ADDITIONAL_CHANCE = 1213;  //"无增购机会"
+    MATCH_ENTRY_FEE_NOT_ENOUGH = 1214;  //"报名费不足"
+    MATCH_NO_REWARD_CONFIG = 1215;      //"无奖励配置"
+    MATCH_CAN_NOT_SIGNUP_BEFORE_GAME = 1216;  //"比赛前夕不能报名"
+    MATCH_ACN_NOT_QUIT_BEFORE_GAME = 1217;    //"比赛前夕不能退赛"
+    MATCH_ADDITIONAL_ENTER = 1218;    //"增购后无法进入比赛"
+    MATCH_EXPIRED          = 1219;    // "比赛过期"
+    MATCH_EXIST_OTHER_MATCH = 1220;  // "存在其他比赛场"
+    
+    //经典场
+    GAME_GOLD_REACHED_MAX_LIMIT = 1300; //"金币已经达到上限"
+    GAME_GOLD_LACK = 1301; //"玩家金币不足"
+    GAME_GOLD_BUY_INSUFFICIENT = 1302;  //"买入金币不足"
+    GAME_GOLD_BUY_OUT_OF_RANGE = 1303;  //"买入金币不在区间内"
+    GAME_GOLD_BUY_NOT_LOWER = 1304;     //"您不能减少桌面金币"
+    GAME_GOLD_BUY_NOT_LESS_CUR = 1305;  //"买入金币数不能低于当前金币"
+    GAME_GOLD_SIT_UNAVAILABLE = 1306;   //"座位已经有人"
+
+    GAME_ROOM_NOT_EXIST  = 1307; //房间不存在
+    GAME_ROOM_NOT_AVAILTABLE_TABLE = 1308; //房间已满， 不可创建桌子
+    GAME_ROOM_PARAM_ERR = 1309; //开房选项错误
+    GAME_ROOM_COUNT_LIMIT= 1310;  //开房数达到上限
+    GAME_ROOM_FULL = 1311;//房间已满
+    GAME_ROOM_MATCH_ERR= 1312;//匹配失败
+    GAME_ROOM_BET_ERR = 1313; //下注失败
+    GAME_ROOM_EXIST_ROOM = 1314; //已在桌子
+    
+    // 好友
+    FRIEND_HAS_BEEN_FRIEND = 1401; //"对方已经是您的好友"
+    FRIEND_NOT_ADD_SELF = 1402;    //"不能添加自己"
+    FRIEND_NOT_SELECT_SELF = 1403; //"不能搜索自己"
+    FRIEND_OVER_LIMIT = 1404;      //好友数量已达上限
+    FRIEND_ADD_FORBID = 1405;      //禁止添加好友
+    FRIEND_OTHER_OVER_LIMIT = 1406;//对方好友数量已达上限
+    FRIEND_GIVE_CHIPS_LIMIT = 1421;//赠送好友筹码次数已达上限
+
+    //昵称
+    
+    //大厅
+    //卡券
+    HALL_TICKET_USED  = 1501;       //门票已使用
+    HALL_USER_TICKET_EXIST = 1502;  //门票已拥有
+    HALL_EXCHANGE_CONDITION_ERR = 1503;  //不满足兑换条件
+    HALL_EXCHANGE_NO_TICKETS = 1504;  //无剩余票券
+    HALL_TICKET_EXPIRED = 1505;  //门票已过期
+    HALL_OFFLINE_SIGNUP_ALREADY = 1506;  //已报名
+    HALL_OFFLINE_SIGNUP_DEADLINE = 1507;  //截止报名
+    HALL_EXCHANGE_POINTS_NOTENOUGH = 1508;//积分不足
+    HALL_EXCHANGE_TICKETS_NOTENOUGH = 1509;//奖券不足
+    HALL_EXCHANGE_CODE_NOT_EXIST = 1510; //兑换码不存在
+    HALL_EXCHANGE_CODE_USED = 1511; //兑换码已使用过
+    HALL_EXCHANGE_CODE_EXPIRED = 1512; //兑换码已过期
+    HALL_EXCHANGE_CODE_LIMITE = 1513; //兑换码使用次数过多
+    HALL_EXCHANGE_CODE_INVALID = 1514; //兑换码无效
+
+    HALL_NEWHAND_RECEIVE_CODE = 1515; //新手奖励已经领取
+    //邮件
+    HALL_MAIL_AWARDS_NO_GET = 1521;//邮件内有未领取的奖励
+
+    //活动
+    HALL_ACTIVITY_ALREADY_EXPIRED = 1531;//活动已过期
+
+    //PUSH
+    SERVER_UPDATE_NOTIFY = 1601;     //服务维护通知
+    //闲置连接
+    CONNECTTION_IDLE_TOO_LONG = 1602;  //连接空闲太长时间
+
+    SETTLEMENT_RESULT_EXIT = 1603; //结算中请稍后退出
+
+    //AI数据
+    HALL_ALREADY_UNLOCK = 1604;  //已经解锁进阶数据
+}

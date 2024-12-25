@@ -1,0 +1,127 @@
+syntax = "proto3";
+
+option cc_generic_services=false;
+
+package GameRecordProto;
+
+//经典场用户行为信息请求
+message QSUserActInfoReq
+{
+    sint64 uid = 1;  //用户ID
+}
+
+//经典场用户行为信息应答
+message QSUserActInfoResp
+{
+    sint32 resultCode = 1;  //结果码
+    sint32 hdCardCount = 2; //手牌数
+    sint32 poolCount = 3;   //投入奖池的次数
+    sint32 winCount = 4;    //胜数
+    sint32 showCount = 5;   //展示手牌的场数
+    bytes bestCards = 6;    //最佳手牌
+    sint32 callCount = 7;   //跟注数
+    sint32 raiseCount = 8;  //加注数
+    sint32 betCount = 9;    //下注数
+    sint32 intoPoolWinCount= 10;
+    sint32 intoPoolCount= 11;
+}
+
+//AI场用户牌信息
+message AIUserCardInfoItem
+{
+    sint32 uid = 1;                //用户id
+    sint32 coinchange = 2;         //盈利
+    string cardvalue = 3;          //牌数据
+    sint32 wincount = 4;           //获胜手数
+    sint32 cardcount = 5;          //总手数
+}
+
+//AI场用户牌信息应答
+message AIUserCardInfoResp
+{
+    sint32 resultCode = 1;  //结果码
+    map<string, AIUserCardInfoItem> data = 2; //cardvalue->AIUserCardInfoItem
+}
+
+//AI场用户基础信息
+message AIUserBaseInfoItem
+{
+    sint32 uid = 1;                //用户id
+    sint32 coinchange = 2;         //盈利
+    string date = 3;               //日期
+    sint32 level = 4;              //等级
+    sint32 handcount = 5;          //手数
+    sint32 wincount = 6;           //获胜手数
+}
+
+//AI场用户基础信息集合(日期)
+message AIUserBaseInfoList
+{
+    map<string, AIUserBaseInfoItem> info = 1; //date->AIUserBaseInfoItem
+}
+
+//AI场用户基础信息应答
+message AIUserBaseInfoResp
+{
+    sint32 resultCode = 1;  //结果码
+    map<sint32, AIUserBaseInfoList> data = 2; //blindLevel->AIUserBaseInfoList
+}
+
+//比赛场用户行为信息请求
+message KOUserActInfoReq
+{
+    sint64 uid = 1;  //用户ID
+    sint32 type = 2; // 4: ko   5: sng 
+}
+
+//比赛场用户行为信息应答
+message KOUserActInfoResp
+{
+    sint32 resultCode = 1;  //结果码
+    sint32 matchCount = 2;  //参赛次数
+    sint32 winCount = 3;    //获奖次数
+    sint32 rank = 4;        //最好成绩
+    sint32 type = 5; // 4: ko   5: sng
+}
+
+message UserStat
+{
+    sint64 lUid= 1;
+    string sNickName = 2;
+    sint32 iBuyInCount = 3;
+    sint64 lBuyInNum = 4;
+    sint64 lWinNum = 5;
+}
+
+message RoomCalStat
+{
+    string sRoomID = 1;
+    string sRoomKey = 2;
+    sint32 iBlindLevel = 3;
+    sint64 lGameTime = 4;
+    map<sint64, UserStat> info = 5;
+    sint64 lCreaterID = 6;
+    sint32 iSeatCount = 7;
+}
+message PRGameInfoReq
+{
+    sint32 type = 1; //0: 所有 1: 我创建的  2：我加入的
+}
+
+message PRGameInfoResp
+{
+    sint32 resultCode = 1;
+    sint32 type = 2;
+    repeated RoomCalStat info = 3;
+}
+
+message PRDeleteGameInfoReq
+{
+    string sRoomKey = 1;
+    sint64 lGameTime = 3;
+}
+
+message PRDeleteGameInfoResp
+{
+    sint32 resultCode = 1;
+}
